@@ -8,6 +8,9 @@ const API_BASE = '/api';
 // Tag and Platform Translation Map
 const TAG_TRANSLATIONS = {
   'featured': 'おすすめ',
+  'newest': '完全新着',
+  'top-sellers': 'ベストセラー',
+  'new-and-popular': '新着＆人気',
   'action': 'アクション',
   'horror': 'ホラー',
   'roguelike': 'ローグライク',
@@ -32,13 +35,23 @@ function translateTag(tag) {
   return TAG_TRANSLATIONS[normalized] || tag;
 }
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // State Management
 const state = {
   gamesQueue: [],
   currentQueueIndex: 0,
   likedList: [],      // Array of game objects: { id, name, developer, price, headerImage, link, description }
   skippedList: [],    // Array of game ids
-  currentTag: 'Featured',
+  currentTag: 'newest',
   isFetching: false,
 };
 
@@ -337,22 +350,22 @@ function createCardDOM(game, isTopCard, index) {
   card.innerHTML = `
     <!-- Top Visual Media -->
     <div class="card-media">
-      <img src="${game.headerImage}" alt="${game.name}">
+      <img src="${game.headerImage}" alt="${escapeHtml(game.name)}">
     </div>
     
     <!-- Info Section -->
     <div class="card-info">
       <div class="card-header-line">
-        <h2 class="card-title">${game.name}</h2>
-        <span class="card-price">${game.price === 'Free' ? '無料' : game.price}</span>
+        <h2 class="card-title">${escapeHtml(game.name)}</h2>
+        <span class="card-price">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span>
       </div>
-      <p class="card-dev">by ${game.developer}</p>
+      <p class="card-dev">by ${escapeHtml(game.developer)}</p>
       <div class="translate-container" style="display: flex; justify-content: flex-end;">
         <button class="btn-translate secondary-button" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 4px;" data-translated="false">
           <span>🇯🇵 日本語に翻訳</span>
         </button>
       </div>
-      <p class="card-desc">${game.description}</p>
+      <p class="card-desc">${escapeHtml(game.description)}</p>
       
       <div class="card-tags">
         ${tagsHtml}
@@ -362,7 +375,7 @@ function createCardDOM(game, isTopCard, index) {
     <!-- Expanding Full Details Panel -->
     <div class="card-details-panel">
       <header class="panel-header">
-        <h3 class="panel-title">${game.name}</h3>
+        <h3 class="panel-title">${escapeHtml(game.name)}</h3>
       </header>
       <div class="panel-body">
         <div class="translate-container" style="margin-bottom: 12px; display: flex; justify-content: flex-end;">
@@ -370,15 +383,15 @@ function createCardDOM(game, isTopCard, index) {
             <span>🇯🇵 日本語に翻訳</span>
           </button>
         </div>
-        <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${game.description}</p>
+        <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${escapeHtml(game.description)}</p>
         <div class="panel-meta">
           <div class="meta-row">
             <span class="meta-label">開発者</span>
-            <span class="meta-value">${game.developer}</span>
+            <span class="meta-value">${escapeHtml(game.developer)}</span>
           </div>
           <div class="meta-row">
             <span class="meta-label">価格</span>
-            <span class="meta-value">${game.price === 'Free' ? '無料' : game.price}</span>
+            <span class="meta-value">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span>
           </div>
           <div class="meta-row">
             <span class="meta-label">対応プラットフォーム</span>
@@ -568,10 +581,10 @@ function renderLikedList() {
     const item = document.createElement('div');
     item.className = 'liked-item';
     item.innerHTML = `
-      <img src="${game.headerImage}" alt="${game.name}" class="liked-item-img">
+      <img src="${game.headerImage}" alt="${escapeHtml(game.name)}" class="liked-item-img">
       <div class="liked-item-info">
-        <h4 class="liked-item-title">${game.name}</h4>
-        <p class="liked-item-dev">by ${game.developer} | <span style="color:#fa5c5c; font-weight:700;">${game.price === 'Free' ? '無料' : game.price}</span></p>
+        <h4 class="liked-item-title">${escapeHtml(game.name)}</h4>
+        <p class="liked-item-dev">by ${escapeHtml(game.developer)} | <span style="color:#fa5c5c; font-weight:700;">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span></p>
         <div class="liked-item-actions">
           <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link">
             🌐 itch.ioで開く

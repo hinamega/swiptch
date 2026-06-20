@@ -16,8 +16,16 @@ module.exports = async function handler(req, res) {
     }
 
     let fetchUrl = 'https://itch.io/games/featured.xml';
-    if (tag.toLowerCase() !== 'featured') {
-      fetchUrl = `https://itch.io/games/tag-${tag.toLowerCase()}.xml`;
+    const lowerTag = tag.toLowerCase();
+
+    if (lowerTag === 'newest') {
+      fetchUrl = 'https://itch.io/games/newest.xml';
+    } else if (lowerTag === 'top-sellers') {
+      fetchUrl = 'https://itch.io/games/top-sellers.xml';
+    } else if (lowerTag === 'new-and-popular') {
+      fetchUrl = 'https://itch.io/games/new-and-popular.xml';
+    } else if (lowerTag !== 'featured') {
+      fetchUrl = `https://itch.io/games/tag-${lowerTag}.xml`;
     }
 
     const response = await fetch(fetchUrl);

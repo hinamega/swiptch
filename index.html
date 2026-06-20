@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Swiptch (スワイイッチ) - itch.ioゲームディスカバリーアプリ</title>
+  <title>Swiptch (スイプッチ) - itch.ioゲームディスカバリーアプリ</title>
   <meta name="description" content="Tinder風のスワイプ操作でitch.ioのインディーゲームをディグれる、ゲームディスカバリーWebアプリ。">
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
@@ -41,7 +41,10 @@
         <!-- Tag Filter Selector -->
         <div class="select-wrapper">
           <select id="tagFilter" aria-label="Filter games by tag">
-            <option value="Featured">おすすめ</option>
+            <option value="Featured">おすすめ (Featured)</option>
+            <option value="new-and-popular">新着＆人気 (New & Popular)</option>
+            <option value="newest" selected>完全新着 (Newest)</option>
+            <option value="top-sellers">ベストセラー (Top Sellers)</option>
             <option value="Action">アクション</option>
             <option value="Horror">ホラー</option>
             <option value="Roguelike">ローグライク</option>
@@ -140,7 +143,7 @@
       </header>
       <div class="modal-body">
         <div class="about-section">
-          <p><strong>Swiptch（スワイイッチ）</strong>は、<a href="https://itch.io" target="_blank" rel="noopener">itch.io</a>の面白いインディーゲームをTinder風のスワイプ操作でディグれるアプリだよ。</p>
+          <p><strong>Swiptch（スイプッチ）</strong>は、<a href="https://itch.io" target="_blank" rel="noopener">itch.io</a>の面白いインディーゲームをTinder風のスワイプ操作でディグれるアプリだよ。</p>
           <p>itch.io公式のRSSフィードを解析して、注目作品や特定のタグのゲームを、スマホ向けに最適化されたジェスチャーUIで直接表示するよ。</p>
         </div>
         <div class="settings-group">
