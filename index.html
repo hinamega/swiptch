@@ -59,6 +59,10 @@
           <span id="likedCountBadge" class="button-badge hidden">0</span>
         </button>
 
+        <button id="btnOpenHelp" class="icon-button" aria-label="Open Help / How to Use">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </button>
+
         <button id="btnOpenSettings" class="icon-button" aria-label="Open Info / Settings">
           <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
@@ -143,6 +147,55 @@
           <h3>Local Actions</h3>
           <button id="btnResetSkipsSettings" class="secondary-button" style="width: 100%; margin-bottom: 10px;">Reset Skipped Games</button>
           <button id="btnClearLikesSettings" class="danger-button" style="width: 100%;">Clear All Liked Games</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Help / How to Use -->
+  <div id="helpModal" class="modal-overlay hidden">
+    <div class="modal-container center-modal">
+      <header class="modal-header">
+        <h2>How to Use Swiptch</h2>
+        <button id="btnCloseHelp" class="close-button" aria-label="Close help">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="help-content">
+          <div class="help-item">
+            <div class="help-icon like-color">❤️</div>
+            <div class="help-desc">
+              <strong>Swipe Right / Click Like</strong>
+              <p>Save the game to your "Liked Games" list.</p>
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-icon skip-color">❌</div>
+            <div class="help-desc">
+              <strong>Swipe Left / Click Skip</strong>
+              <p>Skip the game and view the next one.</p>
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-icon info-color">ℹ️</div>
+            <div class="help-desc">
+              <strong>Tap Card / Click Info</strong>
+              <p>Flip the card to read the full description, developer, price, and platforms.</p>
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-icon link-color">🌐</div>
+            <div class="help-desc">
+              <strong>Open on itch.io</strong>
+              <p>Click "Open on itch.io" inside the details or liked list to play/download the game!</p>
+            </div>
+          </div>
+          <div class="help-item">
+            <div class="help-icon filter-color">🏷️</div>
+            <div class="help-desc">
+              <strong>Filter by Tag</strong>
+              <p>Use the dropdown in the header to filter games by genres like Horror, Roguelike, or Action.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

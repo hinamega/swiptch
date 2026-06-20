@@ -49,6 +49,11 @@ const DOM = {
   btnResetSkipsSettings: document.getElementById('btnResetSkipsSettings'),
   btnClearLikesSettings: document.getElementById('btnClearLikesSettings'),
   
+  // Help Modal
+  btnOpenHelp: document.getElementById('btnOpenHelp'),
+  btnCloseHelp: document.getElementById('btnCloseHelp'),
+  helpModal: document.getElementById('helpModal'),
+  
   // Toasts
   toastContainer: document.getElementById('toastContainer'),
 };
@@ -58,10 +63,20 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLocalStorage();
   registerServiceWorker();
   setupEventListeners();
+  checkFirstVisitHelp();
   
   // Initial load
   fetchGamesPool();
 });
+
+// Check if user is visiting for the first time, if so, open Help
+function checkFirstVisitHelp() {
+  const hasSeenHelp = localStorage.getItem('swiptch_seen_help');
+  if (!hasSeenHelp) {
+    DOM.helpModal.classList.remove('hidden');
+    localStorage.setItem('swiptch_seen_help', 'true');
+  }
+}
 
 // Load state from LocalStorage
 function loadLocalStorage() {
@@ -121,6 +136,13 @@ function setupEventListeners() {
   DOM.btnCloseSettings.addEventListener('click', () => DOM.settingsModal.classList.add('hidden'));
   DOM.settingsModal.addEventListener('click', (e) => {
     if (e.target === DOM.settingsModal) DOM.settingsModal.classList.add('hidden');
+  });
+
+  // Open / Close Help Modal
+  DOM.btnOpenHelp.addEventListener('click', () => DOM.helpModal.classList.remove('hidden'));
+  DOM.btnCloseHelp.addEventListener('click', () => DOM.helpModal.classList.add('hidden'));
+  DOM.helpModal.addEventListener('click', (e) => {
+    if (e.target === DOM.helpModal) DOM.helpModal.classList.add('hidden');
   });
 
   // Clear Likes (liked drawer view)
