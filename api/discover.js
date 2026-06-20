@@ -72,6 +72,7 @@ module.exports = async function handler(req, res) {
       const price = extractField('price') || '$0.00';
       const link = extractField('link') || extractField('guid');
       const rawDescription = extractField('description');
+      const pubDate = extractField('pubDate');
 
       // Extract developer name from link: e.g. "https://jonnys-games.itch.io/..." -> "jonnys-games"
       let developer = 'Unknown';
@@ -125,7 +126,8 @@ module.exports = async function handler(req, res) {
         capsuleImage: safeImageUrl || 'https://placehold.co/600x400/2a2a2a/ffffff?text=No+Cover',
         tags: tags.filter(t => t.toLowerCase() !== 'free'), // exclude "Free" as it's already in the price
         description: cleanDescription || 'No description available.',
-        link: link
+        link: link,
+        published: pubDate
       };
     });
 

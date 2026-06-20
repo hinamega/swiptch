@@ -35,6 +35,20 @@ function translateTag(tag) {
   return TAG_TRANSLATIONS[normalized] || tag;
 }
 
+function formatDate(dateStr) {
+  if (!dateStr) return '不明';
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    return `${y}年${m}月${d}日`;
+  } catch (e) {
+    return dateStr;
+  }
+}
+
 function escapeHtml(str) {
   if (!str) return '';
   return str
@@ -396,6 +410,15 @@ function createCardDOM(game, isTopCard, index) {
             <span class="meta-label">対応プラットフォーム</span>
             <span class="meta-value">${game.tags.filter(t => ['windows', 'mac', 'linux', 'android', 'web', 'other'].includes(t.toLowerCase())).map(t => translateTag(t)).join(', ') || 'ブラウザ / その他'}</span>
           </div>
+          <div class="meta-row">
+            <span class="meta-label">リリース日</span>
+            <span class="meta-value">${formatDate(game.published)}</span>
+          </div>
+        </div>
+        <div style="margin-top: 24px; display: flex; justify-content: center;">
+          <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px; border-radius: 12px; gap: 8px;">
+            🌐 itch.ioで詳細を開く
+          </a>
         </div>
       </div>
     </div>
