@@ -329,7 +329,6 @@ function renderCards() {
 
 // Create Card HTML Element
 function createCardDOM(game, isTopCard, index) {
-  console.log(`[Swiptch Debug] Rendering card #${index}: ${game.name} - Image URL: ${game.headerImage}`);
   const card = document.createElement('div');
   card.className = `card game-card ${isTopCard ? 'top-card' : 'next-card'}`;
   card.dataset.index = index;

@@ -1,8 +1,16 @@
 module.exports = async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Set CORS headers - restrict to own domain to prevent API abuse
+  const allowedOrigins = [
+    'https://swiptch.hinamega.com',
+    'https://swiptch.vercel.app',
+    'http://localhost:3000'
+  ];
+  const origin = req.headers['origin'] || '';
+  const allowedOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Vary', 'Origin');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
