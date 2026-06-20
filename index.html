@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Swiptch - itch.io Game Discovery App</title>
+  <meta name="description" content="Discover indie games on itch.io with a Tinder-like swipe interface. Swipe right to like, left to skip. Zero cost, secure, PWA-enabled.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicons and PWA Icons -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23fa5c5c%22/><path d=%22M30,30 L70,30 L70,40 L55,40 L55,70 L45,70 L45,40 L30,40 Z%22 fill=%22%23ffffff%22/></svg>">
+  <meta name="theme-color" content="#1a1a1a">
+  
+  <!-- iOS and PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Swiptch">
+</head>
+<body>
+  <!-- Background Glows (itch.io Crimson & Deep Gray) -->
+  <div class="glow-bg glow-red"></div>
+  <div class="glow-bg glow-dark"></div>
+
+  <!-- App Shell -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-text">Swiptch</span>
+        <span class="logo-badge">itch.io</span>
+      </div>
+      <div class="header-actions">
+        <!-- Tag Filter Selector -->
+        <div class="select-wrapper">
+          <select id="tagFilter" aria-label="Filter games by tag">
+            <option value="Featured">Featured</option>
+            <option value="Action">Action</option>
+            <option value="Horror">Horror</option>
+            <option value="Roguelike">Roguelike</option>
+            <option value="Metroidvania">Metroidvania</option>
+            <option value="Casual">Casual</option>
+            <option value="Adventure">Adventure</option>
+            <option value="RPG">RPG</option>
+            <option value="Platformer">Platformer</option>
+            <option value="Simulation">Simulation</option>
+          </select>
+        </div>
+
+        <button id="btnOpenLiked" class="icon-button badge-container" aria-label="Open Liked Games list">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span id="likedCountBadge" class="button-badge hidden">0</span>
+        </button>
+
+        <button id="btnOpenSettings" class="icon-button" aria-label="Open Info / Settings">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Discovery Card Stack -->
+    <main class="card-stack-wrapper">
+      <div id="cardStack" class="card-stack">
+        <!-- Shimmer loading template -->
+        <div class="card shimmer-card" id="shimmerCard">
+          <div class="shimmer-img"></div>
+          <div class="shimmer-content">
+            <div class="shimmer-line title"></div>
+            <div class="shimmer-line price"></div>
+            <div class="shimmer-line desc"></div>
+            <div class="shimmer-line tags"></div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="card empty-card hidden" id="emptyCard">
+          <div class="empty-emoji">👾</div>
+          <h2>End of the feed!</h2>
+          <p>Change your filter tag above or reset your skips to continue browsing itch.io gems.</p>
+          <button id="btnResetSkips" class="secondary-button">Reset Skipped Games</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Swipe Controls -->
+    <footer class="swipe-controls">
+      <button id="btnSkip" class="control-button skip" aria-label="Skip / Dislike">
+        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      
+      <button id="btnInfo" class="control-button info" aria-label="More Info">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      </button>
+      
+      <button id="btnLike" class="control-button like" aria-label="Like / Favorite">
+        <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </button>
+    </footer>
+  </div>
+
+  <!-- Modal: Liked List -->
+  <div id="likedModal" class="modal-overlay hidden">
+    <div class="modal-container bottom-drawer">
+      <header class="modal-header">
+        <h2>My Liked Games (<span id="likedCountTitle">0</span>)</h2>
+        <button id="btnCloseLiked" class="close-button" aria-label="Close Liked Games list">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p class="modal-hint">Tap open to view the developer's game page on itch.io and support their work!</p>
+        <div id="likedList" class="liked-list">
+          <!-- Populated dynamically -->
+          <div class="no-likes-message">
+            <p>You haven't liked any games yet! Swipe right to see them here.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnClearLikes" class="danger-button">Clear All Likes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Settings / Info -->
+  <div id="settingsModal" class="modal-overlay hidden">
+    <div class="modal-container center-modal">
+      <header class="modal-header">
+        <h2>About Swiptch</h2>
+        <button id="btnCloseSettings" class="close-button" aria-label="Close settings">&times;</button>
+      </header>
+      <div class="modal-body">
+        <div class="about-section">
+          <p><strong>Swiptch</strong> is a Tinder-like discovery app for finding awesome indie games on <a href="https://itch.io" target="_blank" rel="noopener">itch.io</a>.</p>
+          <p>It parses public itch.io RSS feeds to bring you the hottest, newest, or tag-specific games directly in a neat, gesture-based mobile interface.</p>
+        </div>
+        <div class="settings-group">
+          <h3>Local Actions</h3>
+          <button id="btnResetSkipsSettings" class="secondary-button" style="width: 100%; margin-bottom: 10px;">Reset Skipped Games</button>
+          <button id="btnClearLikesSettings" class="danger-button" style="width: 100%;">Clear All Liked Games</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Load script -->
+  <script src="app.js"></script>
+</body>
+</html>
