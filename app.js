@@ -5,6 +5,33 @@
 // API Base Path
 const API_BASE = '/api';
 
+// Tag and Platform Translation Map
+const TAG_TRANSLATIONS = {
+  'featured': 'おすすめ',
+  'action': 'アクション',
+  'horror': 'ホラー',
+  'roguelike': 'ローグライク',
+  'metroidvania': 'メトロイドヴァニア',
+  'casual': 'カジュアル',
+  'adventure': 'アドベンチャー',
+  'rpg': 'RPG',
+  'platformer': 'プラットフォーマー',
+  'simulation': 'シミュレーション',
+  'windows': 'Windows',
+  'mac': 'Mac',
+  'linux': 'Linux',
+  'android': 'Android',
+  'web': 'ブラウザ版',
+  'other': 'その他',
+  'free': '無料',
+  'indie': 'インディー'
+};
+
+function translateTag(tag) {
+  const normalized = tag.toLowerCase().trim();
+  return TAG_TRANSLATIONS[normalized] || tag;
+}
+
 // State Management
 const state = {
   gamesQueue: [],
@@ -153,13 +180,21 @@ function setupEventListeners() {
     clearLikes();
     DOM.settingsModal.classList.add('hidden');
   });
+
+  // Translate button inside card details (using event delegation)
+  DOM.cardStack.addEventListener('click', (e) => {
+    const translateBtn = e.target.closest('.btn-translate');
+    if (translateBtn) {
+      handleTranslateClick(translateBtn);
+    }
+  });
 }
 
 // Reset Skips helper
 function resetSkips() {
   state.skippedList = [];
   saveState('swiptch_skips', state.skippedList);
-  showToast('Skipped games list reset!', 'info');
+  showToast('スキップしたゲームをリセットしたよ！', 'info');
   state.gamesQueue = [];
   state.currentQueueIndex = 0;
   fetchGamesPool();
@@ -167,12 +202,12 @@ function resetSkips() {
 
 // Clear Likes helper
 function clearLikes() {
-  if (confirm('Are you sure you want to clear your liked list?')) {
+  if (confirm('本当にお気に入りリストをすべて削除する？')) {
     state.likedList = [];
     saveState('swiptch_likes', state.likedList);
     updateLikedBadge();
     renderLikedList();
-    showToast('Liked list cleared.', 'info');
+    showToast('お気に入りリストをクリアしたよ。', 'info');
   }
 }
 
@@ -233,7 +268,7 @@ async function fetchGamesPool() {
     renderCards();
   } catch (error) {
     console.error('Error discovery query:', error);
-    showToast('Error connecting to Swiptch API.', 'error');
+    showToast('Swiptch APIへの接続でエラーが発生したよ。', 'error');
     DOM.shimmerCard.classList.add('hidden');
     
     if (state.gamesQueue.length === 0 || state.currentQueueIndex >= state.gamesQueue.length) {
@@ -296,8 +331,8 @@ function createCardDOM(game, isTopCard, index) {
   
   // itch.io games tags
   const tagsHtml = game.tags && game.tags.length > 0 
-    ? game.tags.map(t => `<span class="tag">${t}</span>`).join('')
-    : '<span class="tag">Indie</span>';
+    ? game.tags.map(t => `<span class="tag">${translateTag(t)}</span>`).join('')
+    : `<span class="tag">${translateTag('Indie')}</span>`;
 
   card.innerHTML = `
     <!-- Top Visual Media -->
@@ -309,9 +344,14 @@ function createCardDOM(game, isTopCard, index) {
     <div class="card-info">
       <div class="card-header-line">
         <h2 class="card-title">${game.name}</h2>
-        <span class="card-price">${game.price}</span>
+        <span class="card-price">${game.price === 'Free' ? '無料' : game.price}</span>
       </div>
       <p class="card-dev">by ${game.developer}</p>
+      <div class="translate-container" style="display: flex; justify-content: flex-end;">
+        <button class="btn-translate secondary-button" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 4px;" data-translated="false">
+          <span>🇯🇵 日本語に翻訳</span>
+        </button>
+      </div>
       <p class="card-desc">${game.description}</p>
       
       <div class="card-tags">
@@ -325,19 +365,24 @@ function createCardDOM(game, isTopCard, index) {
         <h3 class="panel-title">${game.name}</h3>
       </header>
       <div class="panel-body">
+        <div class="translate-container" style="margin-bottom: 12px; display: flex; justify-content: flex-end;">
+          <button class="btn-translate secondary-button" style="padding: 6px 12px; font-size: 13px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 6px;" data-translated="false">
+            <span>🇯🇵 日本語に翻訳</span>
+          </button>
+        </div>
         <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${game.description}</p>
         <div class="panel-meta">
           <div class="meta-row">
-            <span class="meta-label">Developer</span>
+            <span class="meta-label">開発者</span>
             <span class="meta-value">${game.developer}</span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">Price</span>
-            <span class="meta-value">${game.price}</span>
+            <span class="meta-label">価格</span>
+            <span class="meta-value">${game.price === 'Free' ? '無料' : game.price}</span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">Platforms</span>
-            <span class="meta-value">${game.tags.filter(t => ['windows', 'mac', 'linux', 'android', 'web', 'other'].includes(t.toLowerCase())).join(', ') || 'Web / Other'}</span>
+            <span class="meta-label">対応プラットフォーム</span>
+            <span class="meta-value">${game.tags.filter(t => ['windows', 'mac', 'linux', 'android', 'web', 'other'].includes(t.toLowerCase())).map(t => translateTag(t)).join(', ') || 'ブラウザ / その他'}</span>
           </div>
         </div>
       </div>
@@ -473,7 +518,7 @@ function executeSwipe(direction) {
       });
       saveState('swiptch_likes', state.likedList);
       updateLikedBadge();
-      showToast(`Liked ${game.name}! ❤️`, 'like');
+      showToast(`「${game.name}」をお気に入りに追加したよ！ ❤️`, 'like');
     }
   } else {
     // Skip game
@@ -502,7 +547,7 @@ function renderLikedList() {
   if (state.likedList.length === 0) {
     DOM.likedList.innerHTML = `
       <div class="no-likes-message">
-        <p>You haven't liked any games yet! Swipe right to see them here.</p>
+        <p>まだお気に入りしたゲームがないよ！右スワイプでお気に入りに追加してね。</p>
       </div>
     `;
     return;
@@ -515,10 +560,10 @@ function renderLikedList() {
       <img src="${game.headerImage}" alt="${game.name}" class="liked-item-img">
       <div class="liked-item-info">
         <h4 class="liked-item-title">${game.name}</h4>
-        <p class="liked-item-dev">by ${game.developer} | <span style="color:#fa5c5c; font-weight:700;">${game.price}</span></p>
+        <p class="liked-item-dev">by ${game.developer} | <span style="color:#fa5c5c; font-weight:700;">${game.price === 'Free' ? '無料' : game.price}</span></p>
         <div class="liked-item-actions">
           <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link">
-            🌐 Open on itch.io
+            🌐 itch.ioで開く
           </a>
         </div>
       </div>
@@ -542,7 +587,7 @@ function removeLike(gameId) {
   saveState('swiptch_likes', state.likedList);
   updateLikedBadge();
   renderLikedList();
-  showToast('Removed from liked list.', 'info');
+  showToast('お気に入りから削除したよ。', 'info');
 }
 
 // Register PWA Service Worker
@@ -554,4 +599,81 @@ function registerServiceWorker() {
         .catch(err => console.warn('ServiceWorker registration failed: ', err));
     });
   }
+}
+
+// Handle Translate Button Click
+async function handleTranslateClick(btn) {
+  const card = btn.closest('.game-card');
+  if (!card) return;
+  
+  // Find correct description element based on button container
+  let descEl;
+  const isPanel = btn.closest('.card-details-panel');
+  if (isPanel) {
+    descEl = isPanel.querySelector('.panel-desc-full');
+  } else {
+    const infoEl = btn.closest('.card-info');
+    if (infoEl) {
+      descEl = infoEl.querySelector('.card-desc');
+    }
+  }
+  
+  if (!descEl) return;
+  
+  const isTranslated = btn.dataset.translated === 'true';
+  
+  if (isTranslated) {
+    // Restore original text
+    const originalText = btn.dataset.originalText || '';
+    descEl.textContent = originalText;
+    btn.dataset.translated = 'false';
+    btn.querySelector('span').textContent = '🇯🇵 日本語に翻訳';
+    btn.classList.remove('translated');
+  } else {
+    // Translate text
+    const textToTranslate = descEl.textContent.trim();
+    if (!textToTranslate) return;
+    
+    // Save original text
+    if (!btn.dataset.originalText) {
+      btn.dataset.originalText = textToTranslate;
+    }
+    
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.querySelector('span').textContent = '翻訳中...';
+    
+    try {
+      const translatedText = await translateText(textToTranslate);
+      descEl.textContent = translatedText;
+      btn.dataset.translated = 'true';
+      btn.querySelector('span').textContent = '🇺🇸 原文に戻す';
+      btn.classList.add('translated');
+    } catch (error) {
+      console.error('Translation error:', error);
+      showToast('翻訳に失敗したよ。ネットワークを確認してみてね。', 'error');
+      btn.querySelector('span').textContent = '🇯🇵 日本語に翻訳';
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+    }
+  }
+}
+
+// Google Translate Free Web API Fetcher
+async function translateText(text) {
+  if (!text) return '';
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ja&dt=t&q=${encodeURIComponent(text)}`;
+  
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to fetch translation');
+  }
+  
+  const data = await response.json();
+  if (data && data[0]) {
+    return data[0].map(item => item[0] || '').join('');
+  }
+  
+  throw new Error('Invalid translation response');
 }
