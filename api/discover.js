@@ -129,7 +129,7 @@ module.exports = async function handler(req, res) {
       };
     });
 
-    // Shuffle results (Fisher-Yates) for a discovery/tinder feel
+    // Shuffle results (Fisher-Yates) for a discovery/card-swiping feel
     for (let i = games.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [games[i], games[j]] = [games[j], games[i]];
