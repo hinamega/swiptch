@@ -416,6 +416,17 @@ function setupDragEvents(card) {
       return;
     }
     
+    // Prevent drag triggering on buttons, selectors, or the scrollable description text
+    if (
+      e.target.closest('.btn-translate') ||
+      e.target.closest('.control-button') ||
+      e.target.closest('button') ||
+      e.target.closest('select') ||
+      e.target.closest('.card-desc')
+    ) {
+      return;
+    }
+    
     dragStart = { x: e.clientX, y: e.clientY };
     card.classList.add('dragging');
     card.setPointerCapture(e.pointerId);
