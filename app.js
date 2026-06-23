@@ -5,45 +5,179 @@
 // API Base Path
 const API_BASE = '/api';
 
-// Tag and Platform Translation Map
-const TAG_TRANSLATIONS = {
-  'featured': 'おすすめ',
-  'newest': '完全新着',
-  'top-sellers': 'ベストセラー',
-  'new-and-popular': '新着＆人気',
-  'action': 'アクション',
-  'horror': 'ホラー',
-  'roguelike': 'ローグライク',
-  'metroidvania': 'メトロイドヴァニア',
-  'casual': 'カジュアル',
-  'adventure': 'アドベンチャー',
-  'rpg': 'RPG',
-  'platformer': 'プラットフォーマー',
-  'simulation': 'シミュレーション',
-  'windows': 'Windows',
-  'mac': 'Mac',
-  'linux': 'Linux',
-  'android': 'Android',
-  'web': 'ブラウザ版',
-  'other': 'その他',
-  'free': '無料',
-  'indie': 'インディー'
+// Localization Resources
+const TRANSLATIONS = {
+  ja: {
+    appTitle: "Swiptch (スイプチ) - itch.ioゲームディスカバリーアプリ",
+    featured: "おすすめ (Featured)",
+    newAndPopular: "新着＆人気 (New & Popular)",
+    newest: "完全新着 (Newest)",
+    topSellers: "ベストセラー (Top Sellers)",
+    action: "アクション",
+    horror: "ホラー",
+    roguelike: "ローグライク",
+    metroidvania: "メトロイドヴァニア",
+    casual: "カジュアル",
+    adventure: "アドベンチャー",
+    rpg: "RPG",
+    platformer: "プラットフォーマー",
+    simulation: "シミュレーション",
+    
+    emptyTitle: "フィードの最後まで見たよ！",
+    emptyDesc: "上のタグフィルターを変更するか、スキップした履歴をリセットしてブラウジングを続けてね。",
+    btnResetSkips: "スキップしたゲームをリセット",
+    likedTitle: "お気に入りしたゲーム",
+    modalHint: "「itch.ioで開く」をタップすると開発者のページが開いて、ゲームのプレイや応援ができるよ！",
+    noLikes: "まだお気に入りしたゲームがないよ！右スワイプでお気に入りに追加してね。",
+    btnClearLikes: "お気に入りをすべて削除",
+    aboutTitle: "Swiptchについて",
+    aboutText1: "<strong>Swiptch（スイプチ）</strong>は、<a href=\"https://itch.io\" target=\"_blank\" rel=\"noopener\">itch.io</a>の面白いインディーゲームをカードスワイプ操作で直感的にディグれるアプリだよ。",
+    aboutText2: "itch.io公式のRSSフィードを解析して、注目作品や特定のタグのゲームを、スマホ向けに最適化されたジェスチャーUIで直接表示するよ。",
+    aboutText3: "⚠️ このアプリは非公式のファンツールです。itch.ioとは無関係です。<br>表示されるゲームの著作権・画像・説明文はそれぞれの開発者に帰属します。<br>ゲームデータは <a href=\"https://itch.io\" target=\"_blank\" rel=\"noopener\" style=\"color: var(--accent-red);\">itch.io</a> 公式RSSフィードより取得しています。",
+    viewSource: "GitHubでソースコードを見る",
+    localSettings: "ローカル設定",
+    langLabel: "言語 (Language)",
+    resetSkipsSettings: "スキップしたゲームをリセット",
+    clearLikesSettings: "お気に入りしたゲームを全削除",
+    helpTitle: "Swiptchの使い方",
+    helpSwipeRightTitle: "右スワイプ / ハートボタン",
+    helpSwipeRightDesc: "ゲームをお気に入りリストに保存するよ。",
+    helpSwipeLeftTitle: "左スワイプ / バツボタン",
+    helpSwipeLeftDesc: "ゲームをスキップして、次のゲームを表示するよ。",
+    helpTapTitle: "カードをタップ / iボタン",
+    helpTapDesc: "カードをめくって、詳細な説明、開発者、価格、対応プラットフォームを確認できるよ。",
+    helpItchTitle: "Open on itch.io",
+    helpItchDesc: "詳細画面やお気に入りリストにある「itch.ioで開く」からゲームページに飛べるよ！",
+    helpFilterTitle: "タグで絞り込み",
+    helpFilterDesc: "ヘッダーのプルダウンを使って、ホラーやローグライク、アクションなどのジャンルで絞り込めるよ。",
+    
+    // Dynamic JS texts
+    toastResetSkips: "スキップしたゲームをリセットしたよ！",
+    confirmClearLikes: "本当にお気に入りリストをすべて削除する？",
+    toastClearLikes: "お気に入りリストをクリアしたよ。",
+    toastTranslationFailed: "翻訳に失敗したよ。ネットワークを確認してみてね。",
+    toastNetworkError: "Swiptch APIへの接続でエラーが発生したよ。",
+    toastAddLike: "「{name}」をお気に入りに追加したよ！ ❤️",
+    toastRemoveLike: "お気に入りから削除したよ。",
+    translateToJa: "🇯🇵 日本語に翻訳",
+    restoreOriginal: "🇺🇸 原文に戻す",
+    translating: "翻訳中...",
+    priceFree: "無料",
+    devLabel: "開発者",
+    priceLabel: "価格",
+    platformsLabel: "対応プラットフォーム",
+    publishedLabel: "リリース日",
+    openItchDetails: "🌐 itch.ioで詳細を開く",
+    openItch: "🌐 itch.ioで開く",
+    
+    // Date and platform tags translations
+    datePattern: "{y}年{m}月{d}日",
+    unknownDate: "不明",
+    platformWeb: "ブラウザ版",
+    platformOther: "その他",
+    windows: "Windows",
+    mac: "Mac",
+    linux: "Linux",
+    android: "Android",
+    free: "無料",
+    indie: "インディー"
+  },
+  en: {
+    appTitle: "Swiptch - itch.io Game Discovery App",
+    featured: "Featured",
+    newAndPopular: "New & Popular",
+    newest: "Newest",
+    topSellers: "Top Sellers",
+    action: "Action",
+    horror: "Horror",
+    roguelike: "Roguelike",
+    metroidvania: "Metroidvania",
+    casual: "Casual",
+    adventure: "Adventure",
+    rpg: "RPG",
+    platformer: "Platformer",
+    simulation: "Simulation",
+    
+    emptyTitle: "You've reached the end!",
+    emptyDesc: "Change the tag filter above or reset skipped history to continue browsing.",
+    btnResetSkips: "Reset Skipped Games",
+    likedTitle: "Liked Games",
+    modalHint: "Tap 'Open on itch.io' to open the developer's page, play, or support their work!",
+    noLikes: "No liked games yet! Swipe right to add games to your favorites.",
+    btnClearLikes: "Clear All Favorites",
+    aboutTitle: "About Swiptch",
+    aboutText1: "<strong>Swiptch</strong> is a web application where you can intuitively discover interesting indie games on <a href=\"https://itch.io\" target=\"_blank\" rel=\"noopener\">itch.io</a> using swipe gestures.",
+    aboutText2: "It parses itch.io's official RSS feeds and displays featured games or specific tags with a mobile-optimized gesture UI.",
+    aboutText3: "⚠️ This application is an unofficial fan tool and is not affiliated with itch.io.<br>Copyrights, images, and descriptions of games belong to their respective developers.<br>Game data is fetched from the <a href=\"https://itch.io\" target=\"_blank\" rel=\"noopener\" style=\"color: var(--accent-red);\">itch.io</a> official RSS feeds.",
+    viewSource: "View Source on GitHub",
+    localSettings: "Local Settings",
+    langLabel: "Language",
+    resetSkipsSettings: "Reset Skipped Games",
+    clearLikesSettings: "Clear All Favorites",
+    helpTitle: "How to Use Swiptch",
+    helpSwipeRightTitle: "Swipe Right / Heart Button",
+    helpSwipeRightDesc: "Save the game to your favorites list.",
+    helpSwipeLeftTitle: "Swipe Left / Cross Button",
+    helpSwipeLeftDesc: "Skip the game and show the next one.",
+    helpTapTitle: "Tap Card / Info Button",
+    helpTapDesc: "Flip the card to check detailed descriptions, developer, price, and supported platforms.",
+    helpItchTitle: "Open on itch.io",
+    helpItchDesc: "Navigate to the game page from the 'Open on itch.io' button in the details panel or favorites list!",
+    helpFilterTitle: "Filter by Tags",
+    helpFilterDesc: "Use the dropdown in the header to filter games by genres like Horror, Roguelike, Action, and more.",
+    
+    // Dynamic JS texts
+    toastResetSkips: "Skipped history has been reset!",
+    confirmClearLikes: "Are you sure you want to remove all favorite games?",
+    toastClearLikes: "Favorites list cleared.",
+    toastTranslationFailed: "Translation failed. Please check your network connection.",
+    toastNetworkError: "An error occurred while connecting to Swiptch API.",
+    toastAddLike: "Added \"{name}\" to favorites! ❤️",
+    toastRemoveLike: "Removed from favorites.",
+    translateToJa: "🇯🇵 Translate to Japanese",
+    restoreOriginal: "🇺🇸 Restore Original",
+    translating: "Translating...",
+    priceFree: "Free",
+    devLabel: "Developer",
+    priceLabel: "Price",
+    platformsLabel: "Platforms",
+    publishedLabel: "Published",
+    openItchDetails: "🌐 Open on itch.io",
+    openItch: "🌐 Open on itch.io",
+    
+    // Date and platform tags translations
+    datePattern: "{m}/{d}/{y}",
+    unknownDate: "Unknown",
+    platformWeb: "Web",
+    platformOther: "Other",
+    windows: "Windows",
+    mac: "Mac",
+    linux: "Linux",
+    android: "Android",
+    free: "Free",
+    indie: "Indie"
+  }
 };
 
 function translateTag(tag) {
   const normalized = tag.toLowerCase().trim();
-  return TAG_TRANSLATIONS[normalized] || tag;
+  const lang = state.language || 'ja';
+  return TRANSLATIONS[lang][normalized] || TRANSLATIONS[lang][tag] || tag;
 }
 
 function formatDate(dateStr) {
-  if (!dateStr) return '不明';
+  const lang = state.language || 'ja';
+  if (!dateStr) return TRANSLATIONS[lang].unknownDate;
   try {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return dateStr;
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
     const d = date.getDate();
-    return `${y}年${m}月${d}日`;
+    return TRANSLATIONS[lang].datePattern
+      .replace('{y}', y)
+      .replace('{m}', m)
+      .replace('{d}', d);
   } catch (e) {
     return dateStr;
   }
@@ -67,6 +201,7 @@ const state = {
   skippedList: [],    // Array of game ids
   currentTag: 'newest',
   isFetching: false,
+  language: 'ja',     // User language choice: 'ja' or 'en'
 };
 
 // Touch / Drag Gesture State
@@ -102,6 +237,7 @@ const DOM = {
   settingsModal: document.getElementById('settingsModal'),
   btnResetSkipsSettings: document.getElementById('btnResetSkipsSettings'),
   btnClearLikesSettings: document.getElementById('btnClearLikesSettings'),
+  langSelector: document.getElementById('langSelector'),
   
   // Help Modal
   btnOpenHelp: document.getElementById('btnOpenHelp'),
@@ -115,6 +251,20 @@ const DOM = {
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
   loadLocalStorage();
+  
+  // Set initial language from local state or detect from browser
+  if (!state.language) {
+    const browserLang = (navigator.language || 'ja').substring(0, 2);
+    state.language = (browserLang === 'ja') ? 'ja' : 'en';
+    saveState('swiptch_lang', state.language);
+  }
+  
+  // Apply language settings to UI and Selector
+  setLanguage(state.language);
+  if (DOM.langSelector) {
+    DOM.langSelector.value = state.language;
+  }
+  
   registerServiceWorker();
   setupEventListeners();
   checkFirstVisitHelp();
@@ -137,6 +287,7 @@ function loadLocalStorage() {
   try {
     state.likedList = JSON.parse(localStorage.getItem('swiptch_likes')) || [];
     state.skippedList = JSON.parse(localStorage.getItem('swiptch_skips')) || [];
+    state.language = localStorage.getItem('swiptch_lang');
     
     // Apply initial badge states
     updateLikedBadge();
@@ -208,6 +359,18 @@ function setupEventListeners() {
     DOM.settingsModal.classList.add('hidden');
   });
 
+  // Language selection change
+  if (DOM.langSelector) {
+    DOM.langSelector.addEventListener('change', (e) => {
+      setLanguage(e.target.value);
+      // Re-render cards and liked list to update current list translations
+      renderCards();
+      if (!DOM.likedModal.classList.contains('hidden')) {
+        renderLikedList();
+      }
+    });
+  }
+
   // Translate button inside card details (using event delegation)
   DOM.cardStack.addEventListener('click', (e) => {
     const translateBtn = e.target.closest('.btn-translate');
@@ -221,7 +384,7 @@ function setupEventListeners() {
 function resetSkips() {
   state.skippedList = [];
   saveState('swiptch_skips', state.skippedList);
-  showToast('スキップしたゲームをリセットしたよ！', 'info');
+  showToast(TRANSLATIONS[state.language].toastResetSkips, 'info');
   state.gamesQueue = [];
   state.currentQueueIndex = 0;
   fetchGamesPool();
@@ -229,12 +392,13 @@ function resetSkips() {
 
 // Clear Likes helper
 function clearLikes() {
-  if (confirm('本当にお気に入りリストをすべて削除する？')) {
+  const lang = state.language;
+  if (confirm(TRANSLATIONS[lang].confirmClearLikes)) {
     state.likedList = [];
     saveState('swiptch_likes', state.likedList);
     updateLikedBadge();
     renderLikedList();
-    showToast('お気に入りリストをクリアしたよ。', 'info');
+    showToast(TRANSLATIONS[lang].toastClearLikes, 'info');
   }
 }
 
@@ -295,7 +459,7 @@ async function fetchGamesPool() {
     renderCards();
   } catch (error) {
     console.error('Error discovery query:', error);
-    showToast('Swiptch APIへの接続でエラーが発生したよ。', 'error');
+    showToast(TRANSLATIONS[state.language].toastNetworkError, 'error');
     DOM.shimmerCard.classList.add('hidden');
     
     if (state.gamesQueue.length === 0 || state.currentQueueIndex >= state.gamesQueue.length) {
@@ -360,6 +524,31 @@ function createCardDOM(game, isTopCard, index) {
     ? game.tags.map(t => `<span class="tag">${translateTag(t)}</span>`).join('')
     : `<span class="tag">${translateTag('Indie')}</span>`;
 
+  const lang = state.language;
+  const dict = TRANSLATIONS[lang];
+  
+  // Price Translation
+  const priceDisplay = game.price === 'Free' ? dict.priceFree : escapeHtml(game.price);
+  
+  // Hide translate button if UI language is English (since original text is usually English)
+  const translateBtnHtml = lang === 'en' 
+    ? '' 
+    : `
+      <div class="translate-container" style="display: flex; justify-content: flex-end;">
+        <button class="btn-translate secondary-button" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 4px;" data-translated="false">
+          <span>${dict.translateToJa}</span>
+        </button>
+      </div>`;
+
+  const panelTranslateBtnHtml = lang === 'en'
+    ? ''
+    : `
+        <div class="translate-container" style="margin-bottom: 12px; display: flex; justify-content: flex-end;">
+          <button class="btn-translate secondary-button" style="padding: 6px 12px; font-size: 13px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 6px;" data-translated="false">
+            <span>${dict.translateToJa}</span>
+          </button>
+        </div>`;
+
   card.innerHTML = `
     <!-- Top Visual Media -->
     <div class="card-media">
@@ -370,14 +559,10 @@ function createCardDOM(game, isTopCard, index) {
     <div class="card-info">
       <div class="card-header-line">
         <h2 class="card-title">${escapeHtml(game.name)}</h2>
-        <span class="card-price">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span>
+        <span class="card-price">${priceDisplay}</span>
       </div>
       <p class="card-dev">by ${escapeHtml(game.developer)}</p>
-      <div class="translate-container" style="display: flex; justify-content: flex-end;">
-        <button class="btn-translate secondary-button" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 4px;" data-translated="false">
-          <span>🇯🇵 日本語に翻訳</span>
-        </button>
-      </div>
+      ${translateBtnHtml}
       <p class="card-desc">${escapeHtml(game.description)}</p>
       
       <div class="card-tags">
@@ -391,33 +576,29 @@ function createCardDOM(game, isTopCard, index) {
         <h3 class="panel-title">${escapeHtml(game.name)}</h3>
       </header>
       <div class="panel-body">
-        <div class="translate-container" style="margin-bottom: 12px; display: flex; justify-content: flex-end;">
-          <button class="btn-translate secondary-button" style="padding: 6px 12px; font-size: 13px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 6px;" data-translated="false">
-            <span>🇯🇵 日本語に翻訳</span>
-          </button>
-        </div>
+        ${panelTranslateBtnHtml}
         <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${escapeHtml(game.description)}</p>
         <div class="panel-meta">
           <div class="meta-row">
-            <span class="meta-label">開発者</span>
+            <span class="meta-label">${dict.devLabel}</span>
             <span class="meta-value">${escapeHtml(game.developer)}</span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">価格</span>
-            <span class="meta-value">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span>
+            <span class="meta-label">${dict.priceLabel}</span>
+            <span class="meta-value">${priceDisplay}</span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">対応プラットフォーム</span>
-            <span class="meta-value">${game.tags.filter(t => ['windows', 'mac', 'linux', 'android', 'web', 'other'].includes(t.toLowerCase())).map(t => translateTag(t)).join(', ') || 'ブラウザ / その他'}</span>
+            <span class="meta-label">${dict.platformsLabel}</span>
+            <span class="meta-value">${game.tags.filter(t => ['windows', 'mac', 'linux', 'android', 'web', 'other'].includes(t.toLowerCase())).map(t => translateTag(t)).join(', ') || dict.platformWeb + ' / ' + dict.platformOther}</span>
           </div>
           <div class="meta-row">
-            <span class="meta-label">リリース日</span>
+            <span class="meta-label">${dict.publishedLabel}</span>
             <span class="meta-value">${formatDate(game.published)}</span>
           </div>
         </div>
         <div style="margin-top: 24px; display: flex; justify-content: center;">
           <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px; border-radius: 12px; gap: 8px;">
-            🌐 itch.ioで詳細を開く
+            ${dict.openItchDetails}
           </a>
         </div>
       </div>
@@ -564,7 +745,9 @@ function executeSwipe(direction) {
       });
       saveState('swiptch_likes', state.likedList);
       updateLikedBadge();
-      showToast(`「${game.name}」をお気に入りに追加したよ！ ❤️`, 'like');
+      
+      const toastMsg = TRANSLATIONS[state.language].toastAddLike.replace('{name}', game.name);
+      showToast(toastMsg, 'like');
     }
   } else {
     // Skip game
@@ -589,11 +772,13 @@ function openLikedModal() {
 // Render dynamic elements inside liked drawer
 function renderLikedList() {
   DOM.likedList.innerHTML = '';
+  const lang = state.language;
+  const dict = TRANSLATIONS[lang];
   
   if (state.likedList.length === 0) {
     DOM.likedList.innerHTML = `
       <div class="no-likes-message">
-        <p>まだお気に入りしたゲームがないよ！右スワイプでお気に入りに追加してね。</p>
+        <p>${dict.noLikes}</p>
       </div>
     `;
     return;
@@ -602,14 +787,16 @@ function renderLikedList() {
   state.likedList.forEach(game => {
     const item = document.createElement('div');
     item.className = 'liked-item';
+    const priceDisplay = game.price === 'Free' ? dict.priceFree : escapeHtml(game.price);
+    
     item.innerHTML = `
       <img src="${game.headerImage}" alt="${escapeHtml(game.name)}" class="liked-item-img">
       <div class="liked-item-info">
         <h4 class="liked-item-title">${escapeHtml(game.name)}</h4>
-        <p class="liked-item-dev">by ${escapeHtml(game.developer)} | <span style="color:#fa5c5c; font-weight:700;">${game.price === 'Free' ? '無料' : escapeHtml(game.price)}</span></p>
+        <p class="liked-item-dev">by ${escapeHtml(game.developer)} | <span style="color:#fa5c5c; font-weight:700;">${priceDisplay}</span></p>
         <div class="liked-item-actions">
           <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link">
-            🌐 itch.ioで開く
+            ${dict.openItch}
           </a>
         </div>
       </div>
@@ -633,7 +820,7 @@ function removeLike(gameId) {
   saveState('swiptch_likes', state.likedList);
   updateLikedBadge();
   renderLikedList();
-  showToast('お気に入りから削除したよ。', 'info');
+  showToast(TRANSLATIONS[state.language].toastRemoveLike, 'info');
 }
 
 // Register PWA Service Worker
@@ -667,13 +854,15 @@ async function handleTranslateClick(btn) {
   if (!descEl) return;
   
   const isTranslated = btn.dataset.translated === 'true';
+  const lang = state.language;
+  const dict = TRANSLATIONS[lang];
   
   if (isTranslated) {
     // Restore original text
     const originalText = btn.dataset.originalText || '';
     descEl.textContent = originalText;
     btn.dataset.translated = 'false';
-    btn.querySelector('span').textContent = '🇯🇵 日本語に翻訳';
+    btn.querySelector('span').textContent = dict.translateToJa;
     btn.classList.remove('translated');
   } else {
     // Translate text
@@ -687,18 +876,18 @@ async function handleTranslateClick(btn) {
     
     btn.classList.add('loading');
     btn.disabled = true;
-    btn.querySelector('span').textContent = '翻訳中...';
+    btn.querySelector('span').textContent = dict.translating;
     
     try {
       const translatedText = await translateText(textToTranslate);
       descEl.textContent = translatedText;
       btn.dataset.translated = 'true';
-      btn.querySelector('span').textContent = '🇺🇸 原文に戻す';
+      btn.querySelector('span').textContent = dict.restoreOriginal;
       btn.classList.add('translated');
     } catch (error) {
       console.error('Translation error:', error);
-      showToast('翻訳に失敗したよ。ネットワークを確認してみてね。', 'error');
-      btn.querySelector('span').textContent = '🇯🇵 日本語に翻訳';
+      showToast(dict.toastTranslationFailed, 'error');
+      btn.querySelector('span').textContent = dict.translateToJa;
     } finally {
       btn.disabled = false;
       btn.classList.remove('loading');
@@ -722,4 +911,39 @@ async function translateText(text) {
   }
   
   throw new Error('Invalid translation response');
+}
+
+// Set Active Language
+function setLanguage(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  state.language = lang;
+  saveState('swiptch_lang', lang);
+  document.documentElement.lang = lang;
+  
+  updateI18n();
+}
+
+// Update UI Texts based on language
+function updateI18n() {
+  const lang = state.language;
+  const dict = TRANSLATIONS[lang];
+  
+  // Update document title
+  document.title = dict.appTitle;
+  
+  // Translate static text elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (el && dict[key]) {
+      el.textContent = dict[key];
+    }
+  });
+  
+  // Translate HTML elements (e.g. including links)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml || el.getAttribute('data-i18n-html');
+    if (el && dict[key]) {
+      el.innerHTML = dict[key];
+    }
+  });
 }

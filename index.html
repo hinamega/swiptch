@@ -41,19 +41,19 @@
         <!-- Tag Filter Selector -->
         <div class="select-wrapper">
           <select id="tagFilter" aria-label="Filter games by tag">
-            <option value="Featured">おすすめ (Featured)</option>
-            <option value="new-and-popular">新着＆人気 (New & Popular)</option>
-            <option value="newest" selected>完全新着 (Newest)</option>
-            <option value="top-sellers">ベストセラー (Top Sellers)</option>
-            <option value="Action">アクション</option>
-            <option value="Horror">ホラー</option>
-            <option value="Roguelike">ローグライク</option>
-            <option value="Metroidvania">メトロイドヴァニア</option>
-            <option value="Casual">カジュアル</option>
-            <option value="Adventure">アドベンチャー</option>
-            <option value="RPG">RPG</option>
-            <option value="Platformer">プラットフォーマー</option>
-            <option value="Simulation">シミュレーション</option>
+            <option value="Featured" data-i18n="featured">おすすめ (Featured)</option>
+            <option value="new-and-popular" data-i18n="newAndPopular">新着＆人気 (New & Popular)</option>
+            <option value="newest" selected data-i18n="newest">完全新着 (Newest)</option>
+            <option value="top-sellers" data-i18n="topSellers">ベストセラー (Top Sellers)</option>
+            <option value="Action" data-i18n="action">アクション</option>
+            <option value="Horror" data-i18n="horror">ホラー</option>
+            <option value="Roguelike" data-i18n="roguelike">ローグライク</option>
+            <option value="Metroidvania" data-i18n="metroidvania">メトロイドヴァニア</option>
+            <option value="Casual" data-i18n="casual">カジュアル</option>
+            <option value="Adventure" data-i18n="adventure">アドベンチャー</option>
+            <option value="RPG" data-i18n="rpg">RPG</option>
+            <option value="Platformer" data-i18n="platformer">プラットフォーマー</option>
+            <option value="Simulation" data-i18n="simulation">シミュレーション</option>
           </select>
         </div>
 
@@ -89,9 +89,9 @@
         <!-- Empty state -->
         <div class="card empty-card hidden" id="emptyCard">
           <div class="empty-emoji">👾</div>
-          <h2>フィードの最後まで見たよ！</h2>
-          <p>上のタグフィルターを変更するか、スキップした履歴をリセットしてブラウジングを続けてね。</p>
-          <button id="btnResetSkips" class="secondary-button">スキップしたゲームをリセット</button>
+          <h2 data-i18n="emptyTitle">フィードの最後まで見たよ！</h2>
+          <p data-i18n="emptyDesc">上のタグフィルターを変更するか、スキップした履歴をリセットしてブラウジングを続けてね。</p>
+          <button id="btnResetSkips" class="secondary-button" data-i18n="btnResetSkips">スキップしたゲームをリセット</button>
         </div>
       </div>
     </main>
@@ -116,20 +116,20 @@
   <div id="likedModal" class="modal-overlay hidden">
     <div class="modal-container bottom-drawer">
       <header class="modal-header">
-        <h2>お気に入りしたゲーム (<span id="likedCountTitle">0</span>)</h2>
+        <h2><span data-i18n="likedTitle">お気に入りしたゲーム</span> (<span id="likedCountTitle">0</span>)</h2>
         <button id="btnCloseLiked" class="close-button" aria-label="Close Liked Games list">&times;</button>
       </header>
       <div class="modal-body">
-        <p class="modal-hint">「itch.ioで開く」をタップすると開発者のページが開いて、ゲームのプレイや応援ができるよ！</p>
+        <p class="modal-hint" data-i18n="modalHint">「itch.ioで開く」をタップすると開発者のページが開いて、ゲームのプレイや応援ができるよ！</p>
         <div id="likedList" class="liked-list">
           <!-- Populated dynamically -->
           <div class="no-likes-message">
-            <p>まだお気に入りしたゲームがないよ！右スワイプでお気に入りに追加してね。</p>
+            <p data-i18n="noLikes">まだお気に入りしたゲームがないよ！右スワイプでお気に入りに追加してね。</p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button id="btnClearLikes" class="danger-button">お気に入りをすべて削除</button>
+        <button id="btnClearLikes" class="danger-button" data-i18n="btnClearLikes">お気に入りをすべて削除</button>
       </div>
     </div>
   </div>
@@ -138,27 +138,34 @@
   <div id="settingsModal" class="modal-overlay hidden">
     <div class="modal-container center-modal">
       <header class="modal-header">
-        <h2>Swiptchについて</h2>
+        <h2 data-i18n="aboutTitle">Swiptchについて</h2>
         <button id="btnCloseSettings" class="close-button" aria-label="Close settings">&times;</button>
       </header>
       <div class="modal-body">
         <div class="about-section">
-          <p><strong>Swiptch（スイプチ）</strong>は、<a href="https://itch.io" target="_blank" rel="noopener">itch.io</a>の面白いインディーゲームをカードスワイプ操作で直感的にディグれるアプリだよ。</p>
-          <p>itch.io公式のRSSフィードを解析して、注目作品や特定のタグのゲームを、スマホ向けに最適化されたジェスチャーUIで直接表示するよ。</p>
-          <p style="margin-top: 10px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5;">
+          <p data-i18n-html="aboutText1"><strong>Swiptch（スイプチ）</strong>は、<a href="https://itch.io" target="_blank" rel="noopener">itch.io</a>の面白いインディーゲームをカードスワイプ操作で直感的にディグれるアプリだよ。</p>
+          <p data-i18n-html="aboutText2">itch.io公式のRSSフィードを解析して、注目作品や特定のタグのゲームを、スマホ向けに最適化されたジェスチャーUIで直接表示するよ。</p>
+          <p style="margin-top: 10px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5;" data-i18n-html="aboutText3">
             ⚠️ このアプリは非公式のファンツールです。itch.ioとは無関係です。<br>
             表示されるゲームの著作権・画像・説明文はそれぞれの開発者に帰属します。<br>
             ゲームデータは <a href="https://itch.io" target="_blank" rel="noopener" style="color: var(--accent-red);">itch.io</a> 公式RSSフィードより取得しています。
           </p>
           <p style="margin-top: 12px; display: flex; align-items: center; gap: 6px;">
             <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-text-secondary);"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-            <a href="https://github.com/hinamega/swiptch" target="_blank" rel="noopener" style="color: var(--accent-red); font-weight: 600; text-decoration: none;">GitHubでソースコードを見る</a>
+            <a href="https://github.com/hinamega/swiptch" target="_blank" rel="noopener" style="color: var(--accent-red); font-weight: 600; text-decoration: none;" data-i18n="viewSource">GitHubでソースコードを見る</a>
           </p>
         </div>
         <div class="settings-group">
-          <h3>ローカル設定</h3>
-          <button id="btnResetSkipsSettings" class="secondary-button" style="width: 100%; margin-bottom: 10px;">スキップしたゲームをリセット</button>
-          <button id="btnClearLikesSettings" class="danger-button" style="width: 100%;">お気に入りしたゲームを全削除</button>
+          <h3 data-i18n="localSettings">ローカル設定</h3>
+          <div class="settings-item">
+            <label for="langSelector" data-i18n="langLabel">言語 (Language)</label>
+            <select id="langSelector">
+              <option value="ja">日本語</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <button id="btnResetSkipsSettings" class="secondary-button" style="width: 100%; margin-bottom: 10px;" data-i18n="resetSkipsSettings">スキップしたゲームをリセット</button>
+          <button id="btnClearLikesSettings" class="danger-button" style="width: 100%;" data-i18n="clearLikesSettings">お気に入りしたゲームを全削除</button>
         </div>
       </div>
     </div>
@@ -168,7 +175,7 @@
   <div id="helpModal" class="modal-overlay hidden">
     <div class="modal-container center-modal">
       <header class="modal-header">
-        <h2>Swiptchの使い方</h2>
+        <h2 data-i18n="helpTitle">Swiptchの使い方</h2>
         <button id="btnCloseHelp" class="close-button" aria-label="Close help">&times;</button>
       </header>
       <div class="modal-body">
@@ -176,36 +183,36 @@
           <div class="help-item">
             <div class="help-icon like-color">❤️</div>
             <div class="help-desc">
-              <strong>右スワイプ / ハートボタン</strong>
-              <p>ゲームをお気に入りリストに保存するよ。</p>
+              <strong data-i18n="helpSwipeRightTitle">右スワイプ / ハートボタン</strong>
+              <p data-i18n="helpSwipeRightDesc">ゲームをお気に入りリストに保存するよ。</p>
             </div>
           </div>
           <div class="help-item">
             <div class="help-icon skip-color">❌</div>
             <div class="help-desc">
-              <strong>左スワイプ / バツボタン</strong>
-              <p>ゲームをスキップして、次のゲームを表示するよ。</p>
+              <strong data-i18n="helpSwipeLeftTitle">左スワイプ / バツボタン</strong>
+              <p data-i18n="helpSwipeLeftDesc">ゲームをスキップして、次のゲームを表示するよ。</p>
             </div>
           </div>
           <div class="help-item">
             <div class="help-icon info-color">ℹ️</div>
             <div class="help-desc">
-              <strong>カードをタップ / iボタン</strong>
-              <p>カードをめくって、詳細な説明、開発者、価格、対応プラットフォームを確認できるよ。</p>
+              <strong data-i18n="helpTapTitle">カードをタップ / iボタン</strong>
+              <p data-i18n="helpTapDesc">カードをめくって、詳細な説明、開発者、価格、対応プラットフォームを確認できるよ。</p>
             </div>
           </div>
           <div class="help-item">
             <div class="help-icon link-color">🌐</div>
             <div class="help-desc">
-              <strong>itch.ioで開く</strong>
-              <p>詳細画面やお気に入りリストにある「itch.ioで開く」からゲームページに飛べるよ！</p>
+              <strong data-i18n="helpItchTitle">Open on itch.io</strong>
+              <p data-i18n="helpItchDesc">詳細画面やお気に入りリストにある「itch.ioで開く」からゲームページに飛べるよ！</p>
             </div>
           </div>
           <div class="help-item">
             <div class="help-icon filter-color">🏷️</div>
             <div class="help-desc">
-              <strong>タグで絞り込み</strong>
-              <p>ヘッダーのプルダウンを使って、ホラーやローグライク、アクションなどのジャンルで絞り込めるよ。</p>
+              <strong data-i18n="helpFilterTitle">タグで絞り込み</strong>
+              <p data-i18n="helpFilterDesc">ヘッダーのプルダウンを使って、ホラーやローグライク、アクションなどのジャンルで絞り込めるよ。</p>
             </div>
           </div>
         </div>
