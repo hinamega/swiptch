@@ -1198,3 +1198,283 @@ body {
   background-color: #1a1a1a;
   color: var(--color-text-primary);
 }
+
+/* ==========================================================================
+   itch.io公式風デザインオーバーライド
+   ========================================================================== */
+
+:root {
+  --color-bg: #1f1f22 !important; /* itch.io風スレートグレー */
+  --color-card-bg: #2b2b30 !important;
+  --color-card-border: #3d3d44 !important;
+  --color-text-primary: #e3e3e6 !important;
+  --color-text-secondary: #9e9ea6 !important;
+  --accent-red: #fa5c5c !important; /* itch.ioレッド */
+  --accent-darkred: #da2c38 !important;
+  --accent-lightred: #ff8a8a !important;
+  --font-family-title: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+body {
+  background-color: #1f1f22 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* クリーンすぎる発光背景を非表示にし、itch.ioらしいフラット感へ */
+.glow-bg {
+  display: none !important;
+}
+
+/* アプリ全体のコンテナ */
+.app-container {
+  background: #1f1f22 !important;
+  max-width: 480px !important;
+  padding: 16px !important;
+}
+
+/* ヘッダーロゴ */
+.logo-text {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  text-shadow: none !important;
+  letter-spacing: -0.5px !important;
+}
+
+.logo-badge {
+  font-family: 'Inter', sans-serif !important;
+  background: #fa5c5c !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  padding: 2px 6px !important;
+  text-transform: lowercase !important;
+  font-weight: 700 !important;
+  letter-spacing: 0px !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* ジャンル選択 */
+.select-wrapper {
+  background: #2b2b30 !important;
+  border: 1px solid #3d3d44 !important;
+  border-radius: 4px !important;
+}
+
+.select-wrapper select {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.select-wrapper select option {
+  background: #2b2b30 !important;
+  color: #e3e3e6 !important;
+}
+
+/* アイコンボタン */
+.icon-button {
+  background: #2b2b30 !important;
+  border: 1px solid #3d3d44 !important;
+  border-radius: 4px !important;
+}
+
+.icon-button:hover {
+  background: #3d3d44 !important;
+  border-color: #fa5c5c !important;
+  transform: none !important;
+}
+
+/* ゲームカードのフラット化・角丸削減 */
+.card {
+  border-radius: 6px !important;
+  background: #2b2b30 !important;
+  border: 1px solid #3d3d44 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s !important;
+}
+
+/* 画像部分 */
+.card-media {
+  background-color: #1a1a1c !important;
+  border-bottom: 1px solid #3d3d44 !important;
+}
+
+.media-overlay {
+  border-radius: 4px !important;
+  background: rgba(43, 43, 48, 0.9) !important;
+  border: 1px solid #3d3d44 !important;
+}
+
+.review-badge {
+  color: #fa5c5c !important;
+}
+
+/* カードテキスト部分 */
+.card-info {
+  background: #2b2b30 !important;
+  padding: 20px !important;
+}
+
+.card-title {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  color: #ffffff !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.card-price {
+  background: #fa5c5c !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 4px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  padding: 3px 8px !important;
+}
+
+.card-dev {
+  color: #9e9ea6 !important;
+}
+
+.card-desc {
+  color: #c1c1c7 !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+.tag {
+  border-radius: 4px !important;
+  background: #1f1f22 !important;
+  border: 1px solid #3d3d44 !important;
+  color: #9e9ea6 !important;
+}
+
+/* コントロールボタン */
+.control-button {
+  border-radius: 6px !important;
+  background: #2b2b30 !important;
+  border: 1px solid #3d3d44 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  color: #e3e3e6 !important;
+}
+
+.control-button svg {
+  display: block !important;
+}
+
+.control-button.skip::after,
+.control-button.like::after,
+.control-button.info::after {
+  content: none !important;
+}
+
+.control-button:active {
+  transform: scale(0.95) !important;
+  box-shadow: none !important;
+}
+
+.control-button.skip:hover {
+  color: #ffffff !important;
+  background: #3d3d44 !important;
+  border-color: #fa5c5c !important;
+  box-shadow: 0 4px 12px rgba(250, 92, 92, 0.1) !important;
+}
+
+.control-button.like:hover {
+  color: #ffffff !important;
+  background: #fa5c5c !important;
+  border-color: #fa5c5c !important;
+  box-shadow: 0 4px 12px rgba(250, 92, 92, 0.3) !important;
+}
+
+.control-button.info:hover {
+  color: #ffffff !important;
+  background: #3d3d44 !important;
+  border-color: #9e9ea6 !important;
+}
+
+/* トースト */
+.toast {
+  border-radius: 4px !important;
+  background: #2b2b30 !important;
+  border: 1px solid #fa5c5c !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* モーダル */
+.modal-container {
+  background: #1f1f22 !important;
+  border: 1px solid #3d3d44 !important;
+  border-radius: 6px !important;
+}
+
+.modal-header {
+  background: #2b2b30 !important;
+  border-bottom: 1px solid #3d3d44 !important;
+  color: #ffffff !important;
+}
+
+.modal-header h2 {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.close-button {
+  background: transparent !important;
+  border: none !important;
+  color: #9e9ea6 !important;
+}
+
+.close-button:hover {
+  color: #ffffff !important;
+}
+
+.modal-body {
+  background: #1f1f22 !important;
+  border: none !important;
+  color: #e3e3e6 !important;
+}
+
+.modal-hint {
+  border-radius: 4px !important;
+  background: rgba(250, 92, 92, 0.08) !important;
+  border: 1px solid rgba(250, 92, 92, 0.2) !important;
+  color: #fa5c5c !important;
+}
+
+.modal-footer {
+  border-top: 1px solid #3d3d44 !important;
+}
+
+/* ボタン */
+.primary-button, .secondary-button, .danger-button {
+  border-radius: 4px !important;
+}
+
+.primary-button {
+  background: #fa5c5c !important;
+  color: #ffffff !important;
+}
+
+.primary-button:hover {
+  background: #ff7070 !important;
+  box-shadow: 0 4px 12px rgba(250, 92, 92, 0.2) !important;
+}
+
+.secondary-button {
+  background: #2b2b30 !important;
+  border: 1px solid #3d3d44 !important;
+  color: #e3e3e6 !important;
+}
+
+.secondary-button:hover {
+  background: #3d3d44 !important;
+}
+

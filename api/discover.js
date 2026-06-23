@@ -36,12 +36,24 @@ module.exports = async function handler(req, res) {
       fetchUrl = `https://itch.io/games/tag-${lowerTag}.xml`;
     }
 
-    const response = await fetch(fetchUrl);
-    if (!response.ok) {
-      throw new Error(`itch.io RSS returned status ${response.status}`);
-    }
-
-    const xmlText = await response.text();
+    const https = require('https');
+    const xmlText = await new Promise((resolve, reject) => {
+      https.get(fetchUrl, (response) => {
+        if (response.statusCode < 200 || response.statusCode >= 300) {
+          reject(new Error(`itch.io RSS returned status ${response.statusCode}`));
+          return;
+        }
+        let data = '';
+        response.on('data', (chunk) => {
+          data += chunk;
+        });
+        response.on('end', () => {
+          resolve(data);
+        });
+      }).on('error', (err) => {
+        reject(err);
+      });
+    });
 
     // Regex to split XML items
     const itemMatches = xmlText.match(/<item>([\s\S]*?)<\/item>/g) || [];
@@ -143,6 +155,14 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ games });
   } catch (error) {
     console.error('Error in itch discover handler:', error);
-    return res.status(500).json({ error: 'Failed to retrieve itch games', message: error.message });
+    return res.status(500).json({
+      error: 'Failed to retrieve itch games',
+      message: error.message,
+      debug: {
+        globalThisFetch: typeof globalThis.fetch,
+        globalFetch: typeof global.fetch,
+        processVersion: process.version
+      }
+    });
   }
 };
