@@ -121,6 +121,7 @@
       </header>
       <div class="modal-body">
         <p class="modal-hint" data-i18n="modalHint">「itch.ioで開く」をタップすると開発者のページが開いて、ゲームのプレイや応援ができるよ！</p>
+        <p id="popupWarning" class="modal-hint popup-warning hidden" data-i18n="popupWarning" style="color: var(--accent-red); margin-top: 4px; font-weight: 600;">⚠️ 一括オープンがブロックされた場合は、ブラウザのアドレスバーからポップアップの許可をオンにしてね！</p>
         <div id="likedList" class="liked-list">
           <!-- Populated dynamically -->
           <div class="no-likes-message">
@@ -128,7 +129,8 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="display: flex; gap: 10px;">
+        <button id="btnOpenAllLikes" class="primary-button" style="flex: 1;" data-i18n="btnOpenAllLikes">すべて別タブで開く</button>
         <button id="btnClearLikes" class="danger-button" data-i18n="btnClearLikes">お気に入りをすべて削除</button>
       </div>
     </div>

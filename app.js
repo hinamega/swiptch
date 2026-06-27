@@ -80,7 +80,9 @@ const TRANSLATIONS = {
     linux: "Linux",
     android: "Android",
     free: "無料",
-    indie: "インディー"
+    indie: "インディー",
+    btnOpenAllLikes: "すべて別タブで開く (一括オープン)",
+    popupWarning: "⚠️ 一括オープンがブロックされた場合は、ブラウザのアドレスバー等からポップアップを許可してね！"
   },
   en: {
     appTitle: "Swiptch - itch.io Game Discovery App",
@@ -155,7 +157,9 @@ const TRANSLATIONS = {
     linux: "Linux",
     android: "Android",
     free: "Free",
-    indie: "Indie"
+    indie: "Indie",
+    btnOpenAllLikes: "Open All in New Tabs",
+    popupWarning: "⚠️ If bulk opening is blocked, please enable popups in your browser settings!"
   }
 };
 
@@ -230,6 +234,8 @@ const DOM = {
   likedCountBadge: document.getElementById('likedCountBadge'),
   likedCountTitle: document.getElementById('likedCountTitle'),
   btnClearLikes: document.getElementById('btnClearLikes'),
+  btnOpenAllLikes: document.getElementById('btnOpenAllLikes'),
+  popupWarning: document.getElementById('popupWarning'),
   
   // Settings Modal
   btnOpenSettings: document.getElementById('btnOpenSettings'),
@@ -353,6 +359,11 @@ function setupEventListeners() {
   // Clear Likes (liked drawer view)
   DOM.btnClearLikes.addEventListener('click', clearLikes);
   
+  // Open All Likes (liked drawer view)
+  if (DOM.btnOpenAllLikes) {
+    DOM.btnOpenAllLikes.addEventListener('click', openAllLikedGames);
+  }
+  
   // Clear Likes (settings view)
   DOM.btnClearLikesSettings.addEventListener('click', () => {
     clearLikes();
@@ -400,6 +411,22 @@ function clearLikes() {
     renderLikedList();
     showToast(TRANSLATIONS[lang].toastClearLikes, 'info');
   }
+}
+
+// Open all liked games in separate tabs
+function openAllLikedGames() {
+  if (state.likedList.length === 0) return;
+  
+  // Show popup block warning as a safety reminder
+  if (DOM.popupWarning) {
+    DOM.popupWarning.classList.remove('hidden');
+  }
+  
+  state.likedList.forEach(game => {
+    if (game.link) {
+      window.open(game.link, '_blank');
+    }
+  });
 }
 
 // Toast Helper
@@ -766,6 +793,25 @@ function executeSwipe(direction) {
 // Open Liked List Drawer
 function openLikedModal() {
   DOM.likedModal.classList.remove('hidden');
+  
+  // Toggle Open All button state based on count
+  if (DOM.btnOpenAllLikes) {
+    if (state.likedList.length === 0) {
+      DOM.btnOpenAllLikes.disabled = true;
+      DOM.btnOpenAllLikes.style.opacity = '0.5';
+      DOM.btnOpenAllLikes.style.pointerEvents = 'none';
+    } else {
+      DOM.btnOpenAllLikes.disabled = false;
+      DOM.btnOpenAllLikes.style.opacity = '';
+      DOM.btnOpenAllLikes.style.pointerEvents = '';
+    }
+  }
+  
+  // Reset warning
+  if (DOM.popupWarning) {
+    DOM.popupWarning.classList.add('hidden');
+  }
+  
   renderLikedList();
 }
 
