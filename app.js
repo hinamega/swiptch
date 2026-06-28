@@ -293,7 +293,15 @@ function loadLocalStorage() {
   try {
     state.likedList = JSON.parse(localStorage.getItem('swiptch_likes')) || [];
     state.skippedList = JSON.parse(localStorage.getItem('swiptch_skips')) || [];
-    state.language = localStorage.getItem('swiptch_lang');
+    
+    const savedLang = localStorage.getItem('swiptch_lang');
+    if (savedLang) {
+      try {
+        state.language = JSON.parse(savedLang);
+      } catch (e) {
+        state.language = savedLang; // Fallback for legacy plain strings
+      }
+    }
     
     // Apply initial badge states
     updateLikedBadge();
