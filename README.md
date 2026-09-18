@@ -38,14 +38,24 @@
 swiptch/
 ├── api/
 │   └── discover.js     # itch.io RSS を解析して JSON で返すサーバーレス関数
-├── js/                 # ES Modules
+├── js/                 # ES Modules（機能単位で分割）
+│   ├── locales.js      # 多言語辞書データ（ja/en）
+│   ├── i18n.js         # 翻訳参照＆日付/HTML フォーマットヘルパー
+│   ├── state.js        # アプリ全体で共有する単一ステート
+│   ├── dom.js          # DOM 要素キャッシュ
 │   ├── api.js          # APIフェッチ＆Google翻訳通信
+│   ├── storage.js      # LocalStorage の安全な永続化ラッパー
 │   ├── gestures.js     # カードドラッグ＆スワイプジェスチャー判定
-│   ├── i18n.js         # 多言語辞書（ja/en）＆フォーマットヘルパー
-│   └── storage.js      # LocalStorage の安全な永続化ラッパー
+│   ├── card.js         # ゲームカードの DOM 生成
+│   ├── deck.js         # フィード取得・カードスタック描画・スワイプ実行
+│   ├── likes.js        # お気に入りの追加/削除/一覧描画
+│   ├── translate.js    # 説明文の翻訳トグル処理
+│   └── ui/
+│       ├── modal.js    # モーダルの開閉ヘルパー
+│       └── toast.js    # トースト通知
 ├── index.html          # メイン UI（HTML構造）
 ├── style.css           # カードアニメーション、ダークモード、レスポンシブデザイン
-├── app.js              # メインコントローラー（初期化＆イベント結合）
+├── app.js              # エントリポイント（起動・イベント配線のみ）
 ├── sw.js               # Service Worker（外部画像のCORS対策およびキャッシュ制御）
 ├── manifest.json       # PWA設定
 ├── server.js           # ローカルデバッグ用の開発サーバー

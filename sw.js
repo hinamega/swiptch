@@ -1,10 +1,23 @@
-const CACHE_NAME = 'swiptch-v2';
+const CACHE_NAME = 'swiptch-v3';
 const ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
-  '/manifest.json'
+  '/manifest.json',
+  '/js/api.js',
+  '/js/card.js',
+  '/js/deck.js',
+  '/js/dom.js',
+  '/js/gestures.js',
+  '/js/i18n.js',
+  '/js/likes.js',
+  '/js/locales.js',
+  '/js/state.js',
+  '/js/storage.js',
+  '/js/translate.js',
+  '/js/ui/modal.js',
+  '/js/ui/toast.js'
 ];
 
 self.addEventListener('install', e => {
