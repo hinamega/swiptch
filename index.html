@@ -5,6 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Swiptch (スイプチ) - itch.ioゲームディスカバリーアプリ</title>
   <meta name="description" content="ジャケット写真をスパスパめくってitch.ioのインディーゲームをディグれる、非公式ファンツール。ゲームの著作権は各開発者に帰属します。">
+  <link rel="canonical" href="https://swiptch.hinamega.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Swiptch (スイプチ)">
+  <meta property="og:title" content="Swiptch (スイプチ) - itch.ioゲームディスカバリーアプリ">
+  <meta property="og:description" content="ジャケットをスワイプして、itch.io のインディーゲームをディグる。気になる作品は右へ。">
+  <meta property="og:url" content="https://swiptch.hinamega.com/">
+  <meta property="og:image" content="https://swiptch.hinamega.com/ogp-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Swiptch - スワイプで見つける、itch.io のインディーゲーム。">
+  <meta property="og:locale" content="ja_JP">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Swiptch (スイプチ) - itch.ioゲームディスカバリーアプリ">
+  <meta name="twitter:description" content="ジャケットをスワイプして、itch.io のインディーゲームをディグる。気になる作品は右へ。">
+  <meta name="twitter:image" content="https://swiptch.hinamega.com/ogp-image.png">
+  <meta name="twitter:image:alt" content="Swiptch - スワイプで見つける、itch.io のインディーゲーム。">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Swiptch",
+    "alternateName": "スイプチ",
+    "url": "https://swiptch.hinamega.com/",
+    "description": "ジャケットをスワイプして itch.io のインディーゲームをディグる非公式ファンツール。",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+  }
+  </script>
+
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   
@@ -23,11 +63,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Swiptch">
   
-  <!-- Vercel Web Analytics -->
+  <!-- Vercel Web Analytics（Vercel 配信時のみ。itch.io の iframe では 404 になるので読まない） -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    if (!/(^|\.)itch\.zone$/.test(location.hostname)) {
+      var vaScript = document.createElement('script');
+      vaScript.defer = true;
+      vaScript.src = '/_vercel/insights/script.js';
+      document.head.appendChild(vaScript);
+    }
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
 
   <!-- Umami Analytics (Self-hosted on ouchi-server) -->
   <script defer src="https://analytics.hinamega.com/script.js" data-website-id="c33347f9-fb7f-4997-afab-2450b2c0b64f"></script>
@@ -138,7 +183,8 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="display: flex; gap: 10px;">
+      <div class="modal-footer" style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button id="btnShareLikes" class="secondary-button" style="flex: 1 1 100%;" data-i18n="btnShareLikes">𝕏 でシェア</button>
         <button id="btnOpenAllLikes" class="primary-button" style="flex: 1;" data-i18n="btnOpenAllLikes">すべて別タブで開く</button>
         <button id="btnClearLikes" class="danger-button" data-i18n="btnClearLikes">お気に入りをすべて削除</button>
       </div>

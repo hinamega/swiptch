@@ -81,6 +81,8 @@ export const TRANSLATIONS = {
     free: "無料",
     indie: "インディー",
     btnOpenAllLikes: "すべて別タブで開く (一括オープン)",
+    btnShareLikes: "𝕏 でシェア",
+    shareText: "Swiptch で itch.io のインディーゲームをディグってる。お気に入り {n}本。",
     popupWarning: "⚠️ 一括オープンがブロックされた場合は、ブラウザのアドレスバー等からポップアップを許可してね！"
   },
   en: {
@@ -158,6 +160,8 @@ export const TRANSLATIONS = {
     free: "Free",
     indie: "Indie",
     btnOpenAllLikes: "Open All in New Tabs",
+    btnShareLikes: "Share on 𝕏",
+    shareText: "Digging indie games on itch.io with Swiptch. {n} favorites so far.",
     popupWarning: "⚠️ If bulk opening is blocked, please enable popups in your browser settings!"
   }
 };

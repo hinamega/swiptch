@@ -1,23 +1,24 @@
-const CACHE_NAME = 'swiptch-v4';
+const CACHE_NAME = 'swiptch-v5';
+// 相対パスで持つ。itch.io の iframe（/html/<id>/ 配下）でも同じ定義で解決できる
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/manifest.json',
-  '/js/api.js',
-  '/js/card.js',
-  '/js/deck.js',
-  '/js/dom.js',
-  '/js/gestures.js',
-  '/js/i18n.js',
-  '/js/likes.js',
-  '/js/locales.js',
-  '/js/state.js',
-  '/js/storage.js',
-  '/js/translate.js',
-  '/js/ui/modal.js',
-  '/js/ui/toast.js'
+  './',
+  './index.html',
+  './style.css',
+  './app.js',
+  './manifest.json',
+  './js/api.js',
+  './js/card.js',
+  './js/deck.js',
+  './js/dom.js',
+  './js/gestures.js',
+  './js/i18n.js',
+  './js/likes.js',
+  './js/locales.js',
+  './js/state.js',
+  './js/storage.js',
+  './js/translate.js',
+  './js/ui/modal.js',
+  './js/ui/toast.js'
 ];
 
 self.addEventListener('install', e => {
@@ -68,7 +69,7 @@ self.addEventListener('fetch', e => {
           return res;
         })
         .catch(() =>
-          caches.match(req).then(cached => cached || caches.match('/index.html'))
+          caches.match(req).then(cached => cached || caches.match('./index.html'))
         )
     );
     return;

@@ -26,6 +26,7 @@ export const DOM = {
   likedCountTitle: document.getElementById('likedCountTitle'),
   btnClearLikes: document.getElementById('btnClearLikes'),
   btnOpenAllLikes: document.getElementById('btnOpenAllLikes'),
+  btnShareLikes: document.getElementById('btnShareLikes'),
   popupWarning: document.getElementById('popupWarning'),
 
   // Settings Modal

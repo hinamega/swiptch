@@ -2,7 +2,9 @@
  * Swiptch - API & External Services Module
  */
 
-const API_BASE = '/api';
+const API_BASE = /(^|\.)itch\.zone$/.test(location.hostname)
+  ? 'https://swiptch.hinamega.com/api'
+  : '/api';
 const API_TIMEOUT_MS = 15000;
 const TRANSLATE_TIMEOUT_MS = 12000;
 

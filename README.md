@@ -97,3 +97,39 @@ swiptch/
    - **Output Directory**: 空欄（デフォルトのルート配信）にします。
 3. **Node.js バージョンの設定**
    - 本プロジェクトの `package.json` で指定されている Node.js バージョン（`24.x`）でサーバーレス関数が起動します。
+
+---
+
+## 🎮 itch.io に HTML5 として置く場合
+
+itch.io は**サーバーサイドコードを一切実行しない**（公式フォーラムで明言）。`api/discover.js` は Vercel に残したまま、フロントだけを itch.io に置く構成になる。
+
+### 前提
+
+- `js/api.js` は `location.hostname` が `*.itch.zone` のとき `https://swiptch.hinamega.com/api` を叩く
+- `api/discover.js` の許可オリジンに `https://html.itch.zone` と `https://html-classic.itch.zone` を追加済み
+- itch の iframe は `sandbox` 属性なしで配信されるため、`localStorage` はそのまま使える
+- Service Worker は itch では**登録しない**（`/html/<id>/` 配下でスコープが浅く、二重管理になるため）
+- Vercel Analytics のスクリプトは itch では読み込まない（404 回避）
+- zip 内はすべて相対パス。`index.html` は zip のルートに置く
+
+### ビルド
+
+```bash
+python -c "
+import zipfile, os
+root = '.'
+out = 'dist/swiptch-itch.zip'
+files = ['index.html','style.css','app.js','manifest.json']
+for d,_,fs in os.walk('js'):
+    for f in fs:
+        if f.endswith('.js'): files.append(os.path.join(d,f).replace(os.sep,'/'))
+with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+    for f in sorted(files): z.write(f,f)
+"
+```
+
+出来た `dist/swiptch-itch.zip` を itch.io の New Project → Kind of project: **HTML** でアップロードし、Embed options は「Embed in page」を選ぶ。
+
+> [!NOTE]
+> itch 側のファイル上限は 1GB。現状の zip は約 31KB。

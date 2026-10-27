@@ -3,6 +3,8 @@ module.exports = async function handler(req, res) {
   const allowedOrigins = [
     'https://swiptch.hinamega.com',
     'https://swiptch.vercel.app',
+    'https://html.itch.zone',
+    'https://html-classic.itch.zone',
     'http://localhost:3000'
   ];
   const origin = req.headers['origin'] || '';

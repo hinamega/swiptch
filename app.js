@@ -21,7 +21,8 @@ import {
   clearLikes,
   openLikedModal,
   renderLikedList,
-  openAllLikedGames
+  openAllLikedGames,
+  shareLikedGames
 } from './js/likes.js';
 import { handleTranslateClick } from './js/translate.js';
 import { openModal, closeModal, enableBackdropClose } from './js/ui/modal.js';
@@ -101,6 +102,9 @@ function setupEventListeners() {
   if (DOM.btnOpenAllLikes) {
     DOM.btnOpenAllLikes.addEventListener('click', openAllLikedGames);
   }
+  if (DOM.btnShareLikes) {
+    DOM.btnShareLikes.addEventListener('click', shareLikedGames);
+  }
 
   // Settings Modal
   DOM.btnOpenSettings.addEventListener('click', () => openModal(DOM.settingsModal));
@@ -138,11 +142,15 @@ function setupEventListeners() {
 
 // Service Worker Registration
 function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('ServiceWorker registered with scope:', reg.scope))
-        .catch(err => console.warn('ServiceWorker registration failed:', err));
-    });
-  }
+  if (!('serviceWorker' in navigator)) return;
+  // itch.io の iframe は /html/<id>/ 配下で動くため、
+  // キャッシュのスコープが浅く意味が薄い。二重管理を避けて登録しない。
+  if (/(^|\.)itch\.zone$/.test(location.hostname)) return;
+
+  window.addEventListener('load', () => {
+    // 絶対パスだと itch.io の CDN ルートを指して 404 になるので相対で登録する
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('ServiceWorker registered with scope:', reg.scope))
+      .catch(err => console.warn('ServiceWorker registration failed:', err));
+  });
 }

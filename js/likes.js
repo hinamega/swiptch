@@ -91,6 +91,20 @@ export function openAllLikedGames() {
 }
 
 /**
+ * お気に入りを X (Twitter) でシェアする
+ */
+export function shareLikedGames() {
+  const count = state.likedList.length;
+  if (count === 0) return;
+
+  const dict = TRANSLATIONS[state.language] || TRANSLATIONS.ja;
+  const text = (dict.shareText || '').replace('{n}', count);
+  const url = 'https://swiptch.hinamega.com/';
+  const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  window.open(intent, '_blank', 'noopener');
+}
+
+/**
  * お気に入り一覧モーダルを開く
  */
 export function openLikedModal() {
@@ -101,6 +115,13 @@ export function openLikedModal() {
     DOM.btnOpenAllLikes.disabled = isEmpty;
     DOM.btnOpenAllLikes.style.opacity = isEmpty ? '0.5' : '';
     DOM.btnOpenAllLikes.style.pointerEvents = isEmpty ? 'none' : '';
+  }
+
+  if (DOM.btnShareLikes) {
+    const isEmpty = state.likedList.length === 0;
+    DOM.btnShareLikes.disabled = isEmpty;
+    DOM.btnShareLikes.style.opacity = isEmpty ? '0.5' : '';
+    DOM.btnShareLikes.style.pointerEvents = isEmpty ? 'none' : '';
   }
 
   if (DOM.popupWarning) {
