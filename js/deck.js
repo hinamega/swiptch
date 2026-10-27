@@ -21,11 +21,33 @@ const RENDER_AHEAD = 2;
 
 let activeCardElement = null;
 
+// フィード取得の世代番号。タグ切替やリセットで増え、
+// 古いレスポンスはこの番号がずれて捨てられる。
+let fetchGeneration = 0;
+// キュー（カードスタック）の世代番号。スワイプ後の遅延描画が
+// リセット後のキューに干渉しないようにする。
+let queueGeneration = 0;
+
+/**
+ * 既にキューに入っている／処理済みのゲーム ID を集める
+ */
+function collectKnownIds() {
+  const ids = new Set();
+  state.gamesQueue.forEach(game => ids.add(game.id));
+  state.likedList.forEach(game => ids.add(game.id));
+  state.skippedList.forEach(id => ids.add(id));
+  return ids;
+}
+
 /**
  * 現在のタグでフィードを追加取得し、キューへ積む
+ * @param {Object} [options]
+ * @param {boolean} [options.force] - 取得中でも新しいリクエストを開始する（タグ切替用）
  */
-export async function fetchGamesPool() {
-  if (state.isFetching) return;
+export async function fetchGamesPool({ force = false } = {}) {
+  if (state.isFetching && !force) return;
+
+  const generation = ++fetchGeneration;
   state.isFetching = true;
 
   DOM.shimmerCard.classList.remove('hidden');
@@ -34,17 +56,23 @@ export async function fetchGamesPool() {
   try {
     const rawGames = await fetchGamesByTag(state.currentTag);
 
-    // Filter out already liked or skipped games
+    // 取得中にタグが切り替わった／リセットされた場合は結果を捨てる
+    if (generation !== fetchGeneration) return;
+
+    // キュー内の重複・処理済み・同一バッチ内の重複をまとめて除外する
+    const known = collectKnownIds();
     const newGames = rawGames.filter(game => {
-      const isLiked = state.likedList.some(item => item.id === game.id);
-      const isSkipped = state.skippedList.includes(game.id);
-      return !isLiked && !isSkipped;
+      if (known.has(game.id)) return false;
+      known.add(game.id);
+      return true;
     });
 
     state.gamesQueue = [...state.gamesQueue, ...newGames];
     DOM.shimmerCard.classList.add('hidden');
     renderCards();
   } catch (error) {
+    if (generation !== fetchGeneration) return;
+
     console.error('Error in fetchGamesPool:', error);
     showToast(getTranslation(state.language, 'toastNetworkError'), 'error');
     DOM.shimmerCard.classList.add('hidden');
@@ -53,7 +81,9 @@ export async function fetchGamesPool() {
       DOM.emptyCard.classList.remove('hidden');
     }
   } finally {
-    state.isFetching = false;
+    if (generation === fetchGeneration) {
+      state.isFetching = false;
+    }
   }
 }
 
@@ -66,10 +96,13 @@ export function renderCards() {
 
   const remaining = state.gamesQueue.length - state.currentQueueIndex;
 
-  if (remaining === 0) {
+  if (remaining <= 0) {
+    activeCardElement = null;
     DOM.emptyCard.classList.remove('hidden');
     return;
   }
+
+  DOM.emptyCard.classList.add('hidden');
 
   const maxToRender = Math.min(RENDER_AHEAD, remaining);
 
@@ -104,8 +137,11 @@ export function executeSwipe(direction) {
   const card = activeCardElement;
   if (!card) return;
 
-  const gameId = parseInt(card.dataset.id, 10);
   const game = state.gamesQueue[state.currentQueueIndex];
+  if (!game) return;
+
+  const generation = queueGeneration;
+  const gameId = game.id;
 
   card.className = `card game-card ${direction === 'right' ? 'swiped-right' : 'swiped-left'}`;
 
@@ -113,15 +149,19 @@ export function executeSwipe(direction) {
   DOM.btnInfo.style.background = '';
 
   if (direction === 'right') {
-    if (game) addLike(game);
+    addLike(game);
   } else {
-    state.skippedList.push(gameId);
-    Storage.saveSkips(state.skippedList);
+    if (!state.skippedList.includes(gameId)) {
+      state.skippedList.push(gameId);
+      Storage.saveSkips(state.skippedList);
+    }
   }
 
   state.currentQueueIndex++;
 
   setTimeout(() => {
+    // タグ切替などでキューが作り直されていたら触らない
+    if (generation !== queueGeneration) return;
     card.remove();
     renderCards();
   }, SWIPE_ANIMATION_MS);
@@ -132,7 +172,8 @@ export function executeSwipe(direction) {
  * @param {'left' | 'right'} direction
  */
 export function handleButtonSwipe(direction) {
-  if (!activeCardElement || state.isFetching) return;
+  // フィード取得中でもキュー内のカードは進められるので isFetching では止めない
+  if (!activeCardElement) return;
 
   if (activeCardElement.classList.contains('swiped-left') || activeCardElement.classList.contains('swiped-right')) {
     return;
@@ -161,8 +202,12 @@ export function toggleCardInfoExpansion() {
 
 /**
  * キューとインデックスを初期化する（タグ変更・リセット時）
+ * 表示中のカードも消して、古いタグのカードが残らないようにする。
  */
 export function resetQueue() {
+  queueGeneration++;
   state.gamesQueue = [];
   state.currentQueueIndex = 0;
+  activeCardElement = null;
+  DOM.cardStack.querySelectorAll('.game-card').forEach(c => c.remove());
 }

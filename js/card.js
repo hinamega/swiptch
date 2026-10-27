@@ -46,9 +46,12 @@ export function createCardDOM(game, isTopCard, index) {
 
   const lang = state.language;
   const dict = TRANSLATIONS[lang] || TRANSLATIONS.ja;
+  const gameTags = Array.isArray(game.tags) ? game.tags : [];
+  const safeImage = escapeHtml(game.headerImage || '');
+  const safeLink = escapeHtml(game.link || '#');
 
-  const tagsHtml = game.tags && game.tags.length > 0
-    ? game.tags.map(t => `<span class="tag">${translateTag(t, lang)}</span>`).join('')
+  const tagsHtml = gameTags.length > 0
+    ? gameTags.map(t => `<span class="tag">${translateTag(t, lang)}</span>`).join('')
     : `<span class="tag">${translateTag('Indie', lang)}</span>`;
 
   const priceDisplay = game.price === 'Free' ? dict.priceFree : escapeHtml(game.price);
@@ -56,7 +59,7 @@ export function createCardDOM(game, isTopCard, index) {
   const translateBtnHtml = lang === 'en' ? '' : buildTranslateButtonHtml(dict, { panel: false });
   const panelTranslateBtnHtml = lang === 'en' ? '' : buildTranslateButtonHtml(dict, { panel: true });
 
-  const platformText = game.tags
+  const platformText = gameTags
     .filter(t => PLATFORM_TAGS.includes(t.toLowerCase()))
     .map(t => translateTag(t, lang))
     .join(', ') || dict.platformWeb + ' / ' + dict.platformOther;
@@ -64,7 +67,7 @@ export function createCardDOM(game, isTopCard, index) {
   card.innerHTML = `
     <!-- Top Media -->
     <div class="card-media">
-      <img src="${game.headerImage}" alt="${escapeHtml(game.name)}">
+      <img src="${safeImage}" alt="${escapeHtml(game.name)}">
     </div>
 
     <!-- Info Section -->
@@ -109,7 +112,7 @@ export function createCardDOM(game, isTopCard, index) {
           </div>
         </div>
         <div style="margin-top: 24px; display: flex; justify-content: center;">
-          <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px; border-radius: 12px; gap: 8px;">
+          <a href="${safeLink}" target="_blank" rel="noopener" class="btn-itch-link" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px; border-radius: 12px; gap: 8px;">
             ${dict.openItchDetails}
           </a>
         </div>

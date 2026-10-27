@@ -1,4 +1,4 @@
-const CACHE_NAME = 'swiptch-v3';
+const CACHE_NAME = 'swiptch-v4';
 const ASSETS = [
   '/',
   '/index.html',
@@ -22,7 +22,14 @@ const ASSETS = [
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    // 1件でも失敗すると addAll 全体が落ちるので、個別に入れて失敗は無視する
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.all(
+        ASSETS.map(asset =>
+          cache.add(asset).catch(err => console.warn('SW: precache failed', asset, err))
+        )
+      )
+    )
   );
   self.skipWaiting(); // Force immediate activation
 });
@@ -43,14 +50,45 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Exclude API calls and cross-origin requests from service worker caching
-  if (e.request.url.includes('/api/') || !e.request.url.startsWith(self.location.origin)) {
+  const req = e.request;
+
+  // GET 以外・API・別オリジンは Service Worker の管轄外
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith('/api/')) return;
+
+  // 画面遷移はネットワーク優先。オフライン時だけキャッシュへ落とす
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+          return res;
+        })
+        .catch(() =>
+          caches.match(req).then(cached => cached || caches.match('/index.html'))
+        )
+    );
     return;
   }
-  
+
+  // 静的アセットは stale-while-revalidate。
+  // キャッシュを即返しつつ裏で取り直すので、更新が次の表示から効く。
   e.respondWith(
-    caches.match(e.request).then(response => {
-      return response || fetch(e.request);
+    caches.match(req).then(cached => {
+      const network = fetch(req)
+        .then(res => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(req, copy)).catch(() => {});
+          }
+          return res;
+        })
+        .catch(() => cached);
+
+      return cached || network;
     })
   );
 });

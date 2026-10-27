@@ -69,7 +69,7 @@ function resetSkips() {
   Storage.saveSkips(state.skippedList);
   showToast(getTranslation(state.language, 'toastResetSkips'), 'info');
   resetQueue();
-  fetchGamesPool();
+  fetchGamesPool({ force: true });
 }
 
 // Event Listeners Registration
@@ -78,7 +78,7 @@ function setupEventListeners() {
   DOM.tagFilter.addEventListener('change', (e) => {
     state.currentTag = e.target.value;
     resetQueue();
-    fetchGamesPool();
+    fetchGamesPool({ force: true });
   });
 
   // Action Buttons

@@ -131,14 +131,16 @@ export function renderLikedList() {
     const item = document.createElement('div');
     item.className = 'liked-item';
     const priceDisplay = game.price === 'Free' ? dict.priceFree : escapeHtml(game.price);
+    const safeImage = escapeHtml(game.headerImage || '');
+    const safeLink = escapeHtml(game.link || '#');
 
     item.innerHTML = `
-      <img src="${game.headerImage}" alt="${escapeHtml(game.name)}" class="liked-item-img">
+      <img src="${safeImage}" alt="${escapeHtml(game.name)}" class="liked-item-img">
       <div class="liked-item-info">
         <h4 class="liked-item-title">${escapeHtml(game.name)}</h4>
         <p class="liked-item-dev">by ${escapeHtml(game.developer)} | <span style="color:#fa5c5c; font-weight:700;">${priceDisplay}</span></p>
         <div class="liked-item-actions">
-          <a href="${game.link}" target="_blank" rel="noopener" class="btn-itch-link">
+          <a href="${safeLink}" target="_blank" rel="noopener" class="btn-itch-link">
             ${dict.openItch}
           </a>
         </div>
