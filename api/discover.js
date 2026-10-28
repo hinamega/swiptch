@@ -118,6 +118,9 @@ module.exports = async function handler(req, res) {
       };
       
       const cleanDescription = stripHtml(rawDescription);
+      // itch.io の RSS は説明未記入の作品だと description が <img> だけになる。
+      // HTML を剥がした結果がほぼ空なら「説明なし」とみなす
+      const hasDescription = cleanDescription.length >= 10;
 
       // Generate a unique ID from the title/index since itch doesn't expose a clean appid in RSS
       // We can hash the link to get a stable numeric ID
@@ -140,6 +143,7 @@ module.exports = async function handler(req, res) {
         capsuleImage: safeImageUrl || 'https://placehold.co/600x400/2a2a2a/ffffff?text=No+Cover',
         tags: tags.filter(t => t.toLowerCase() !== 'free'), // exclude "Free" as it's already in the price
         description: cleanDescription || 'No description available.',
+        hasDescription: hasDescription,
         link: link,
         published: pubDate
       };
@@ -149,6 +153,23 @@ module.exports = async function handler(req, res) {
     for (let i = games.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [games[i], games[j]] = [games[j], games[i]];
+    }
+
+    // 説明ありの作品を優先して並べる（説明なしは 3:1 で後ろに混ぜる）。
+    // itch.io は説明未記入だと RSS の description が <img> だけになり、カード本文が空になる。
+    // 件数は減らさず、並び順だけ変える（36スワイプすれば説明なしも全部見られる）。
+    const withDesc = games.filter((g) => g.hasDescription);
+    const withoutDesc = games.filter((g) => !g.hasDescription);
+    if (withDesc.length > 0 && withoutDesc.length > 0) {
+      const ordered = [];
+      let wi = 0;
+      let ni = 0;
+      while (wi < withDesc.length || ni < withoutDesc.length) {
+        for (let k = 0; k < 3 && wi < withDesc.length; k++) ordered.push(withDesc[wi++]);
+        if (ni < withoutDesc.length) ordered.push(withoutDesc[ni++]);
+      }
+      games.length = 0;
+      games.push(...ordered);
     }
 
     // Cache the list for 1 hour to keep it fresh but reduce load

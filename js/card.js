@@ -64,6 +64,13 @@ export function createCardDOM(game, isTopCard, index) {
     .map(t => translateTag(t, lang))
     .join(', ') || dict.platformWeb + ' / ' + dict.platformOther;
 
+  // itch.io の RSS は説明未記入の作品だと description が空になる（hasDescription=false）。
+  // その場合は本文の代わりに、判断材料になる情報を並べて空白を埋める。
+  const hasDesc = game.hasDescription !== false
+    && typeof game.description === 'string'
+    && game.description !== 'No description available.'
+    && game.description.trim().length >= 10;
+
   card.innerHTML = `
     <!-- Top Media -->
     <div class="card-media">
@@ -78,7 +85,15 @@ export function createCardDOM(game, isTopCard, index) {
       </div>
       <p class="card-dev">by ${escapeHtml(game.developer)}</p>
       ${translateBtnHtml}
-      <p class="card-desc">${escapeHtml(game.description)}</p>
+      ${hasDesc
+        ? `<p class="card-desc">${escapeHtml(game.description)}</p>`
+        : `<div class="card-desc card-desc--empty">
+             <p class="desc-empty-note">${dict.noDescNote}</p>
+             <div class="desc-facts">
+               <span class="fact"><span class="fact-label">${dict.platformsLabel}</span><span class="fact-value">${platformText}</span></span>
+               <span class="fact"><span class="fact-label">${dict.priceLabel}</span><span class="fact-value">${priceDisplay}</span></span>
+             </div>
+           </div>`}
 
       <div class="card-tags">
         ${tagsHtml}
@@ -92,7 +107,7 @@ export function createCardDOM(game, isTopCard, index) {
       </header>
       <div class="panel-body">
         ${panelTranslateBtnHtml}
-        <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${escapeHtml(game.description)}</p>
+        <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${hasDesc ? escapeHtml(game.description) : dict.noDescPanel}</p>
         <div class="panel-meta">
           <div class="meta-row">
             <span class="meta-label">${dict.devLabel}</span>

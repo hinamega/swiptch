@@ -1,4 +1,4 @@
-const CACHE_NAME = 'swiptch-v5';
+const CACHE_NAME = 'swiptch-v6';
 // 相対パスで持つ。itch.io の iframe（/html/<id>/ 配下）でも同じ定義で解決できる
 const ASSETS = [
   './',

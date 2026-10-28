@@ -386,6 +386,57 @@ body {
   padding-right: 4px;
 }
 
+/* 説明が未登録の作品: 本文の代わりに判断材料を並べて空白を埋める */
+.card-desc--empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  max-height: none;
+  overflow: visible;
+  padding: 12px 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.desc-empty-note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #a8a8b3;
+}
+
+.desc-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.desc-facts .fact {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.desc-facts .fact-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #8f8f99;
+  text-transform: uppercase;
+}
+
+.desc-facts .fact-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e6e6ea;
+}
+
 .card-tags {
   display: flex;
   flex-wrap: wrap;
