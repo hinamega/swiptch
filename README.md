@@ -1,135 +1,97 @@
 # Swiptch (スイプチ)
 
-ジャケットをスパスパめくって itch.io のインディーゲームを直感的にディグり、お気に入り一覧からじっくり詳細を確認できる、レスポンシブなゲームディスカバリーWebアプリ（PWA）です。
+itch.io のインディーゲームをカードスワイプで次々めくって探せる、非公式のファンツール（PWA）です。
 
----
+- 本番サイト: https://swiptch.hinamega.com/
 
-## 🚀 主な機能と特徴
+## 主な機能
 
-- **スピーディーなジャケットディグ（スワイプ UI）**
-  - PC（ドラッグ）およびスマートフォン（タッチスワイプ）の両方に対応。カード感覚でジャケットをスパスパめくり、直感的にインディーゲームをディグれます。左スワイプでスキップ、右スワイプでお気に入りに追加します。
-- **お気に入り（Like）一覧と詳細プレビュー**
-  - ディグったゲームはお気に入り欄にストック。後からじっくり詳細情報をチェックしたり、公式ページへアクセスしたりできます。
-- **リアルタイム RSS 連携**
-  - itch.io公式のRSSフィードから、最新の注目作品（Featured）や特定のタグ（Horror, Roguelike, Metroidvaniaなど）のゲームを動的に取得・解析します。
-- **PWA (Progressive Web App) 対応**
-  - ホーム画面への追加、オフラインキャッシュ、モバイルデバイスに最適化されたフルスクリーン表示に対応しています。
-- **セキュアなバックエンド設計**
-  - Vercel Serverless Functions を用いたプロキシ構成。API呼び出しのサニタイズ（SSRF / Path Traversal対策）を組み込んでいます。
-- **バグフリーな設計**
-  - キャッシュ競合を回避するカスタム Service Worker 制御。
-  - 特殊な文字コードやHTMLエンティティ（`&#039;` 等）を自動デコードして描画。
-  - レスポンシブに潰れないフレックス比率に基づくカードレイアウト。
+- **スワイプでゲームをディグる**
+  - 右スワイプ（または `→` キー）でお気に入り、左スワイプ（または `←` キー）でスキップします。
+  - カードタップや `i` / `↑` キーで説明文や対応プラットフォーム、公開日などの詳細を開けます。
+- **タグ絞り込み＆簡易翻訳**
+  - Featured / New & Popular / Newest / Top Sellers やジャンル別タグでフィードを切り替えられます。
+  - 英語の説明文をカード上から日本語へ簡易翻訳できます（日本語UI時）。
+- **お気に入り管理**
+  - お気に入りしたゲームは `localStorage` に保存され、一覧から個別アクセス・一括オープン・X でのシェアができます。
+- **PWA 対応**
+  - ホーム画面への追加や、Service Worker による静的アセットのキャッシュに対応しています。
 
----
+## 技術構成
 
-## 🛠️ 技術スタック
+- フロントエンド: HTML / CSS / Vanilla JS（ES Modules）
+- API プロキシ: Node.js（Vercel Serverless Functions / `api/discover.js`）
+- ローカル開発サーバー: Node.js `http` モジュール（`server.js`）
 
-- **フロントエンド**: HTML5, Vanilla CSS, JavaScript (ES6)
-- **バックエンド (API)**: Node.js (Vercel Serverless Functions)
-- **オフライン / キャッシュ**: Service Worker (`sw.js`)
-- **ローカル開発サーバー**: Node.js `http` モジュールによるカスタム静的＆APIモックサーバー (`server.js`)
-
----
-
-## 📁 ディレクトリ構成
+## ディレクトリ構成
 
 ```text
 swiptch/
 ├── api/
-│   └── discover.js     # itch.io RSS を解析して JSON で返すサーバーレス関数
-├── js/                 # ES Modules（機能単位で分割）
-│   ├── locales.js      # 多言語辞書データ（ja/en）
-│   ├── i18n.js         # 翻訳参照＆日付/HTML フォーマットヘルパー
-│   ├── state.js        # アプリ全体で共有する単一ステート
-│   ├── dom.js          # DOM 要素キャッシュ
-│   ├── api.js          # APIフェッチ＆Google翻訳通信
-│   ├── storage.js      # LocalStorage の安全な永続化ラッパー
-│   ├── gestures.js     # カードドラッグ＆スワイプジェスチャー判定
-│   ├── card.js         # ゲームカードの DOM 生成
-│   ├── deck.js         # フィード取得・カードスタック描画・スワイプ実行
-│   ├── likes.js        # お気に入りの追加/削除/一覧描画
-│   ├── translate.js    # 説明文の翻訳トグル処理
+│   └── discover.js     # itch.io RSS を取得・整形して返す関数
+├── js/
+│   ├── api.js          # API 通信・翻訳リクエスト
+│   ├── card.js         # ゲームカード DOM の生成
+│   ├── deck.js         # キュー管理・カードスタック描画・スワイプ処理
+│   ├── dom.js          # DOM 要素参照
+│   ├── gestures.js     # ポインターによるドラッグ＆スワイプ判定
+│   ├── i18n.js         # 翻訳テキスト解決・フォーマット
+│   ├── likes.js        # お気に入り保存・一覧・X シェア
+│   ├── locales.js      # 日本語 / 英語の辞書データ
+│   ├── state.js        # アプリ内状態
+│   ├── storage.js      # localStorage ラッパー
+│   ├── translate.js    # カード説明文の翻訳トグル
 │   └── ui/
-│       ├── modal.js    # モーダルの開閉ヘルパー
+│       ├── modal.js    # <dialog> モーダル制御
 │       └── toast.js    # トースト通知
-├── index.html          # メイン UI（HTML構造）
-├── style.css           # カードアニメーション、ダークモード、レスポンシブデザイン
-├── app.js              # エントリポイント（起動・イベント配線のみ）
-├── sw.js               # Service Worker（外部画像のCORS対策およびキャッシュ制御）
-├── manifest.json       # PWA設定
-├── server.js           # ローカルデバッグ用の開発サーバー
-└── package.json        # 依存関係と Node.js バージョンの定義
+├── index.html          # メイン画面
+├── style.css           # スタイル・アニメーション
+├── app.js              # 初期化・イベント配線・キーボード操作
+├── sw.js               # Service Worker（静的アセットのキャッシュ制御）
+├── manifest.json       # PWA マニフェスト
+├── icon-192.png        # PWA / iOS 用アイコン (192x192)
+├── icon-512.png        # PWA 用アイコン (512x512)
+├── server.js           # ローカル開発用サーバー
+└── package.json
 ```
 
----
+## ローカルでの動かし方
 
-## 🔧 ローカルでの開発手順
+Node.js（v20 以上、推奨 v24.x）が入っていればそのまま動きます。
 
-### 前提条件
-- Node.js (推奨バージョン: v20.x または v24.x) がインストールされていること。
+```bash
+git clone https://github.com/hinamega/swiptch.git
+cd swiptch
+node server.js
+```
 
-### 手順
-1. **リポジトリのクローン**
-   ```bash
-   git clone https://github.com/hinamega/swiptch.git
-   cd swiptch
-   ```
-2. **ローカルサーバーの起動**
-   ```bash
-   node server.js
-   ```
-3. **ブラウザでのアクセス**
-   - [http://localhost:3000](http://localhost:3000) にアクセスします。
-   - `server.js` は静的アセットの配信に加え、`/api/discover` へのリクエストをローカルの `api/discover.js` ハンドラへ中継（モック実行）します。
+起動したら `http://localhost:3000` を開きます（`server.js` が静的配信と `/api/discover` のローカル実行を兼ねています）。
 
----
+## Vercel へのデプロイ
 
-## 🌐 Vercel へのデプロイ設定
+ビルド不要の静的構成＋Serverless Functions としてそのまま動きます。
 
-本プロジェクトは Vercel にデプロイして動作させることを想定しています。
+- **Framework Preset**: `Other`
+- **Build Command**: Override を ON にして空欄
+- **Output Directory**: 空欄
 
-1. **GitHubリポジトリの紐付け**
-   - Vercelダッシュボードから該当リポジトリ（`swiptch`）をインポートします。
-2. **ダッシュボード設定の調整（重要）**
-   - **Framework Preset**: `Other` を選択。
-   - **Build Command**: `Override` トグルを **ON** にし、**入力欄を完全に空欄** にします。
-   - **Output Directory**: 空欄（デフォルトのルート配信）にします。
-3. **Node.js バージョンの設定**
-   - 本プロジェクトの `package.json` で指定されている Node.js バージョン（`24.x`）でサーバーレス関数が起動します。
+## itch.io 用 HTML5 ビルドについて
 
----
-
-## 🎮 itch.io に HTML5 として置く場合
-
-itch.io は**サーバーサイドコードを一切実行しない**（公式フォーラムで明言）。`api/discover.js` は Vercel に残したまま、フロントだけを itch.io に置く構成になる。
-
-### 前提
-
-- `js/api.js` は `location.hostname` が `*.itch.zone` のとき `https://swiptch.hinamega.com/api` を叩く
-- `api/discover.js` の許可オリジンに `https://html.itch.zone` と `https://html-classic.itch.zone` を追加済み
-- itch の iframe は `sandbox` 属性なしで配信されるため、`localStorage` はそのまま使える
-- Service Worker は itch では**登録しない**（`/html/<id>/` 配下でスコープが浅く、二重管理になるため）
-- Vercel Analytics のスクリプトは itch では読み込まない（404 回避）
-- zip 内はすべて相対パス。`index.html` は zip のルートに置く
-
-### ビルド
+itch.io はサーバーサイドコードを実行できないため、フロント側だけを zip にまとめてアップロードし、`*.itch.zone` 上から `https://swiptch.hinamega.com/api` を叩く構成にしています（Service Worker と Vercel Analytics は itch.io 上では無効化しています）。
 
 ```bash
 python -c "
 import zipfile, os
-root = '.'
 out = 'dist/swiptch-itch.zip'
-files = ['index.html','style.css','app.js','manifest.json']
-for d,_,fs in os.walk('js'):
+files = ['index.html', 'style.css', 'app.js', 'manifest.json', 'icon-192.png', 'icon-512.png']
+for d, _, fs in os.walk('js'):
     for f in fs:
-        if f.endswith('.js'): files.append(os.path.join(d,f).replace(os.sep,'/'))
-with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
-    for f in sorted(files): z.write(f,f)
+        if f.endswith('.js'):
+            files.append(os.path.join(d, f).replace(os.sep, '/'))
+with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
+    for f in sorted(files):
+        z.write(f, f)
 "
 ```
 
-出来た `dist/swiptch-itch.zip` を itch.io の New Project → Kind of project: **HTML** でアップロードし、Embed options は「Embed in page」を選ぶ。
-
-> [!NOTE]
-> itch 側のファイル上限は 1GB。現状の zip は約 31KB。
+生成された `dist/swiptch-itch.zip` を itch.io の HTML プロジェクトとしてアップロードし、Embed options で「Embed in page」を選択します。
