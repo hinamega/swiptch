@@ -75,8 +75,31 @@
     }
   </script>
 
-  <!-- Umami Analytics (Self-hosted on ouchi-server) -->
-  <script defer src="https://analytics.hinamega.com/script.js" data-website-id="c33347f9-fb7f-4997-afab-2450b2c0b64f"></script>
+  <!-- Umami Analytics (Self-hosted on ouchi-server; localhost & ?notrack=1 / umami.disabled は除外) -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var notrackParam = params.get('notrack');
+      try {
+        if (notrackParam === '1') localStorage.setItem('umami.disabled', '1');
+        else if (notrackParam === '0') localStorage.removeItem('umami.disabled');
+      } catch (e) {}
+
+      var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+      var isDisabled = false;
+      try {
+        isDisabled = localStorage.getItem('umami.disabled') === '1';
+      } catch (e) {}
+
+      if (isLocal || notrackParam === '1' || isDisabled) return;
+
+      var umamiScript = document.createElement('script');
+      umamiScript.defer = true;
+      umamiScript.src = 'https://analytics.hinamega.com/script.js';
+      umamiScript.setAttribute('data-website-id', 'c33347f9-fb7f-4997-afab-2450b2c0b64f');
+      document.head.appendChild(umamiScript);
+    })();
+  </script>
 </head>
 <body>
   <!-- Background Glows (itch.io Crimson & Deep Gray) -->
