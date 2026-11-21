@@ -10,16 +10,12 @@ import { TRANSLATIONS, translateTag, formatDate, escapeHtml } from './i18n.js';
 const PLATFORM_TAGS = ['windows', 'mac', 'linux', 'android', 'web', 'other'];
 
 function buildTranslateButtonHtml(dict, { panel }) {
-  const style = panel
-    ? 'padding: 6px 12px; font-size: 13px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 6px;'
-    : 'padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; display: flex; align-items: center; gap: 4px;';
-  const containerStyle = panel
-    ? 'margin-bottom: 12px; display: flex; justify-content: flex-end;'
-    : 'display: flex; justify-content: flex-end;';
+  const containerClass = panel ? 'translate-container translate-container--panel' : 'translate-container';
+  const btnClass = panel ? 'btn-translate secondary-button btn-translate--panel' : 'btn-translate secondary-button btn-translate--card';
 
   return `
-      <div class="translate-container" style="${containerStyle}">
-        <button class="btn-translate secondary-button" style="${style}" data-translated="false">
+      <div class="${containerClass}">
+        <button class="${btnClass}" type="button" data-translated="false">
           <span>${dict.translateToJa}</span>
         </button>
       </div>`;
@@ -39,9 +35,7 @@ export function createCardDOM(game, isTopCard, index) {
   card.dataset.id = game.id;
 
   if (!isTopCard) {
-    card.style.transform = 'scale(0.95) translateY(12px)';
-    card.style.opacity = '0.7';
-    card.style.pointerEvents = 'none';
+    card.setAttribute('aria-hidden', 'true');
   }
 
   const lang = state.language;
@@ -71,10 +65,15 @@ export function createCardDOM(game, isTopCard, index) {
     && game.description !== 'No description available.'
     && game.description.trim().length >= 10;
 
+  const imgAttrs = isTopCard ? 'decoding="async" fetchpriority="high"' : 'decoding="async" loading="lazy"';
+
   card.innerHTML = `
+    <div class="swipe-glow swipe-glow--like" aria-hidden="true"></div>
+    <div class="swipe-glow swipe-glow--skip" aria-hidden="true"></div>
+
     <!-- Top Media -->
     <div class="card-media">
-      <img src="${safeImage}" alt="${escapeHtml(game.name)}">
+      <img src="${safeImage}" alt="${escapeHtml(game.name)}" ${imgAttrs}>
     </div>
 
     <!-- Info Section -->
@@ -107,7 +106,7 @@ export function createCardDOM(game, isTopCard, index) {
       </header>
       <div class="panel-body">
         ${panelTranslateBtnHtml}
-        <p class="panel-desc-full" style="white-space: pre-wrap; font-size: 15px; margin-bottom: 20px;">${hasDesc ? escapeHtml(game.description) : dict.noDescPanel}</p>
+        <p class="panel-desc-full">${hasDesc ? escapeHtml(game.description) : dict.noDescPanel}</p>
         <div class="panel-meta">
           <div class="meta-row">
             <span class="meta-label">${dict.devLabel}</span>
@@ -126,8 +125,8 @@ export function createCardDOM(game, isTopCard, index) {
             <span class="meta-value">${formatDate(game.published, lang)}</span>
           </div>
         </div>
-        <div style="margin-top: 24px; display: flex; justify-content: center;">
-          <a href="${safeLink}" target="_blank" rel="noopener" class="btn-itch-link" style="width: 100%; justify-content: center; padding: 12px; font-size: 14px; border-radius: 12px; gap: 8px;">
+        <div class="panel-cta">
+          <a href="${safeLink}" target="_blank" rel="noopener" class="btn-itch-link btn-itch-link--panel">
             ${dict.openItchDetails}
           </a>
         </div>

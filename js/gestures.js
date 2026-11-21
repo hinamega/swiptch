@@ -53,22 +53,20 @@ export function setupCardGestures(card, { onSwipe, isExpanded }) {
     const tilt = dx * TILT_FACTOR;
     card.style.transform = `translate(${dx}px, ${dy}px) rotate(${tilt}deg)`;
 
-    // 右スワイプ（Like / Crimson）
+    // 右スワイプ（Like / Crimson）— opacity のみ更新して GPU コンポジットに載せる
     if (dx > 40) {
-      const alpha = Math.min(0.8, (dx - 40) / 100);
-      const shadowAlpha = Math.min(0.35, (dx - 40) / 200);
-      card.style.borderColor = `rgba(250, 92, 92, ${alpha})`;
-      card.style.boxShadow = `0 15px 40px rgba(250, 92, 92, ${shadowAlpha})`;
-    } 
+      const ratio = Math.min(1, (dx - 40) / 100);
+      card.style.setProperty('--like-opacity', ratio.toFixed(3));
+      card.style.setProperty('--skip-opacity', '0');
+    }
     // 左スワイプ（Skip / White）
     else if (dx < -40) {
-      const alpha = Math.min(0.3, (-dx - 40) / 100);
-      const shadowAlpha = Math.min(0.1, (-dx - 40) / 200);
-      card.style.borderColor = `rgba(255, 255, 255, ${alpha})`;
-      card.style.boxShadow = `0 15px 40px rgba(255, 255, 255, ${shadowAlpha})`;
+      const ratio = Math.min(1, (-dx - 40) / 100);
+      card.style.setProperty('--skip-opacity', ratio.toFixed(3));
+      card.style.setProperty('--like-opacity', '0');
     } else {
-      card.style.borderColor = '';
-      card.style.boxShadow = '';
+      card.style.setProperty('--like-opacity', '0');
+      card.style.setProperty('--skip-opacity', '0');
     }
   }
 
@@ -94,8 +92,8 @@ export function setupCardGestures(card, { onSwipe, isExpanded }) {
     } else {
       // 元の位置にスムーズに戻す
       card.style.transform = '';
-      card.style.borderColor = '';
-      card.style.boxShadow = '';
+      card.style.removeProperty('--like-opacity');
+      card.style.removeProperty('--skip-opacity');
     }
 
     dragStart = null;

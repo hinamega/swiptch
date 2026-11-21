@@ -1,24 +1,49 @@
 /**
- * Swiptch - Modal Open/Close Helpers
+ * Swiptch - Modal Open/Close Helpers (<dialog> native API)
  */
 
-export function openModal(modal) {
-  if (!modal) return;
-  modal.classList.remove('hidden');
-}
-
-export function closeModal(modal) {
-  if (!modal) return;
-  modal.classList.add('hidden');
+/**
+ * ダイアログをモーダルとして開く
+ * @param {HTMLDialogElement} dialog
+ */
+export function openModal(dialog) {
+  if (!dialog) return;
+  if (typeof dialog.showModal === 'function') {
+    if (!dialog.open) dialog.showModal();
+  } else {
+    dialog.setAttribute('open', '');
+  }
 }
 
 /**
- * オーバーレイ背景クリックで閉じられるようにする
- * @param {HTMLElement} overlay
+ * ダイアログを閉じる
+ * @param {HTMLDialogElement} dialog
  */
-export function enableBackdropClose(overlay) {
-  if (!overlay) return;
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal(overlay);
+export function closeModal(dialog) {
+  if (!dialog) return;
+  if (typeof dialog.close === 'function') {
+    if (dialog.open) dialog.close();
+  } else {
+    dialog.removeAttribute('open');
+  }
+}
+
+/**
+ * ダイアログが開いているかどうかを返す
+ * @param {HTMLDialogElement} dialog
+ * @returns {boolean}
+ */
+export function isModalOpen(dialog) {
+  return Boolean(dialog && dialog.open);
+}
+
+/**
+ * バックドロップ（<dialog> 外枠領域）クリックで閉じられるようにする
+ * @param {HTMLDialogElement} dialog
+ */
+export function enableBackdropClose(dialog) {
+  if (!dialog) return;
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) closeModal(dialog);
   });
 }

@@ -265,6 +265,34 @@ body {
   cursor: grabbing;
 }
 
+.card.next-card {
+  transform: scale(0.95) translateY(12px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* GPU-composited swipe feedback overlays */
+.swipe-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 20;
+  will-change: opacity;
+}
+
+.swipe-glow--like {
+  opacity: var(--like-opacity, 0);
+  border: 2px solid rgba(250, 92, 92, 0.85);
+  box-shadow: inset 0 0 36px rgba(250, 92, 92, 0.28);
+}
+
+.swipe-glow--skip {
+  opacity: var(--skip-opacity, 0);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 0 32px rgba(255, 255, 255, 0.12);
+}
+
 .card.dragging {
   transition: none !important;
 }
@@ -601,7 +629,13 @@ body {
   justify-content: center;
   align-items: center;
   gap: 20px;
-  padding: 12px 0 24px 0;
+  padding: 12px 0 calc(24px + env(safe-area-inset-bottom, 0px)) 0;
+}
+
+/* Keyboard focus accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
 }
 
 .control-button {
@@ -656,27 +690,46 @@ body {
   box-shadow: 0 10px 25px rgba(250, 92, 92, 0.25);
 }
 
-/* Modal overlays (General) */
-.modal-overlay {
+/* Native <dialog> Modals */
+dialog.modal-dialog {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
   z-index: 100;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.25s ease, display 0.25s allow-discrete, overlay 0.25s allow-discrete;
+}
+
+dialog.modal-dialog[open] {
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 1;
-  transition: opacity 0.3s;
 }
 
-.modal-overlay.hidden {
+dialog.modal-dialog.modal-dialog--bottom[open] {
+  align-items: flex-end;
+}
+
+dialog.modal-dialog::backdrop {
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
-  pointer-events: none;
+  transition: opacity 0.25s ease, display 0.25s allow-discrete, overlay 0.25s allow-discrete;
+}
+
+dialog.modal-dialog[open]::backdrop {
+  opacity: 1;
 }
 
 .modal-container {
@@ -693,23 +746,30 @@ body {
 .bottom-drawer {
   height: 80%;
   max-height: 700px;
-  position: absolute;
-  bottom: 0;
   border-radius: 28px 28px 0 0;
   width: 100%;
-}
-
-.modal-overlay.hidden .bottom-drawer {
-  transform: translateY(100%);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .center-modal {
   border-radius: 24px;
   padding: 4px;
+  max-height: 90dvh;
 }
 
-.modal-overlay.hidden .center-modal {
-  transform: scale(0.9);
+@starting-style {
+  dialog.modal-dialog[open] {
+    opacity: 0;
+  }
+  dialog.modal-dialog[open]::backdrop {
+    opacity: 0;
+  }
+  dialog.modal-dialog[open] .bottom-drawer {
+    transform: translateY(100%);
+  }
+  dialog.modal-dialog[open] .center-modal {
+    transform: scale(0.92);
+  }
 }
 
 .modal-header {
@@ -1474,7 +1534,7 @@ body {
 }
 
 .modal-header h2 {
-  font-family: 'Inter', sans-serif !important;
+  font-family: var(--font-family-title) !important;
 }
 
 .close-button {
@@ -1527,5 +1587,122 @@ body {
 
 .secondary-button:hover {
   background: #3d3d44 !important;
+}
+
+/* Utility classes extracted from inline styles */
+.translate-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.translate-container--panel {
+  margin-bottom: 12px;
+}
+
+.btn-translate--card {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-translate--panel {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.panel-desc-full {
+  white-space: pre-wrap;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.panel-cta {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-itch-link--panel {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 12px;
+  gap: 8px;
+}
+
+.popup-warning {
+  color: var(--accent-red);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.modal-footer--liked {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-share-likes {
+  flex: 1 1 100%;
+}
+
+.btn-open-all-likes {
+  flex: 1;
+}
+
+.about-disclaimer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.about-inline-link {
+  color: var(--accent-red);
+}
+
+.about-repo-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.about-repo-icon {
+  color: var(--color-text-secondary);
+}
+
+.about-repo-link {
+  color: var(--accent-red);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-full-mb {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 

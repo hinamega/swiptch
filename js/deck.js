@@ -147,6 +147,7 @@ export function executeSwipe(direction) {
 
   DOM.btnInfo.style.transform = 'none';
   DOM.btnInfo.style.background = '';
+  DOM.btnInfo.setAttribute('aria-expanded', 'false');
 
   if (direction === 'right') {
     addLike(game);
@@ -190,8 +191,10 @@ export function toggleCardInfoExpansion() {
   if (!activeCardElement) return;
   activeCardElement.classList.toggle('expanded');
 
+  const isExpanded = activeCardElement.classList.contains('expanded');
   const infoBtn = DOM.btnInfo;
-  if (activeCardElement.classList.contains('expanded')) {
+  infoBtn.setAttribute('aria-expanded', String(isExpanded));
+  if (isExpanded) {
     infoBtn.style.transform = 'scale(0.9) rotate(180deg)';
     infoBtn.style.background = 'rgba(250, 92, 92, 0.2)';
   } else {

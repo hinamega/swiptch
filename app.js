@@ -25,7 +25,7 @@ import {
   shareLikedGames
 } from './js/likes.js';
 import { handleTranslateClick } from './js/translate.js';
-import { openModal, closeModal, enableBackdropClose } from './js/ui/modal.js';
+import { openModal, closeModal, isModalOpen, enableBackdropClose } from './js/ui/modal.js';
 import { showToast } from './js/ui/toast.js';
 
 // Application Bootstrap
@@ -125,11 +125,30 @@ function setupEventListeners() {
     DOM.langSelector.addEventListener('change', (e) => {
       setLanguage(e.target.value);
       renderCards();
-      if (!DOM.likedModal.classList.contains('hidden')) {
+      if (isModalOpen(DOM.likedModal)) {
         renderLikedList();
       }
     });
   }
+
+  // Keyboard Navigation (PC / Accessibility)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.querySelector('dialog[open]')) return;
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      handleButtonSwipe('left');
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      handleButtonSwipe('right');
+    } else if (e.key === 'ArrowUp' || e.key === 'i' || e.key === 'I') {
+      e.preventDefault();
+      toggleCardInfoExpansion();
+    }
+  });
 
   // Translate click within cards (Event Delegation)
   DOM.cardStack.addEventListener('click', (e) => {
